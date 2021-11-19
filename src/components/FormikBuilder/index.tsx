@@ -1,17 +1,25 @@
+// Formik & Yup:
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { BooleanSchema, DateSchema, NumberSchema } from "yup";
 import StringSchema from "yup/lib/string";
+
+// Component for different types of fields:
 import { Checkbox, Select, TextInput } from "./components";
 
-// =========================== Types =========================== //
-type FieldAny = {
+// =========================== Types of Fields =========================== //
+type FieldAny = { // Common properties of all types of fields
   name: string;
   label: string;
   placeholder?: string;
+  required?: boolean;
 }
-interface FieldTextNumberEmailCheckbox extends FieldAny {
-  type: "text" | "number" | "email" | "checkbox";
+interface FieldTextNumberEmail extends FieldAny {
+  type: "text" | "number" | "email" | "password" | "phone";
+}
+interface FieldCheckbox extends FieldAny {
+  type: "checkbox";
+  startChecked?: boolean;
 }
 interface FieldSelect extends FieldAny {
   type: "select";
@@ -27,15 +35,32 @@ interface FieldDate extends FieldAny {
   };
   helpText: string;
 }
+// =========================== Types Field to export =========================== //
 export type Field =
-  | FieldTextNumberEmailCheckbox
+  | FieldTextNumberEmail
+  | FieldCheckbox
   | FieldSelect
   | FieldDate;
-
 // =========================== Build Initial Values by Field =========================== //
-const BuildInitValues = (fields: Field[]): string | number => {
-  // TODO coger datos iniciales desde el servidor cuando lo tengamos
-  return "";
+const BuildInitValues = (fields: Field[], initialValues: {} | undefined): {} => {
+  let obj: { [x: string]: string | number | boolean } = {};
+  fields.forEach((x) => {
+    switch (x.type) {
+      case 'checkbox': obj[x.name] = x.startChecked === true; break;
+      case 'date': break; // TODO
+      case 'email': obj[x.name] = ""; break;
+      case 'number': obj[x.name] = 0; break;
+      case 'select': obj[x.name] = ""; break;
+      case 'text': obj[x.name] = ""; break;
+    }
+  });
+  if (initialValues){
+    console.log("obj before = " + JSON.stringify(obj));
+    console.log("initialValues = " + JSON.stringify(initialValues));
+    Object.assign(obj, initialValues); //obj = {...obj, ...initialValues};
+    console.log("obj after = " + JSON.stringify(obj));
+  }
+  return obj;
 }
 
 // =========================== Build Component by Field =========================== //
@@ -80,35 +105,41 @@ const BuildFields = (fields: Field[]): React.ReactNode => {
 };
 
 // =========================== Build Validation by Field =========================== //
-type YupSchema = {
-  [x: string]: BooleanSchema | StringSchema | NumberSchema | DateSchema
-};
-const BuildYup = (fields: Field[]) => {
-  // TODO intl
-  let obj: YupSchema = {};
+// type YupSchema = {
+//   [x: string]: BooleanSchema | StringSchema | NumberSchema | DateSchema
+// };
+type YupSchema = BooleanSchema | StringSchema | NumberSchema | DateSchema;
+const BuildYup = (fields: Field[], errorMessageRequired: string) => {
+  // TODO intl <--- NO, porque el mensaje de error se lo pasará por los props directamente
+  let obj: { [x: string]: YupSchema } = {};
   fields.forEach((x) => {
+    let prop: YupSchema= Yup.string();
     switch (x.type) {
-      case 'checkbox': obj[x.name] = Yup.boolean().required("Required"); break;
+      case 'checkbox': prop = Yup.boolean(); break;
       case 'date': break; // TODO
-      case 'email': obj[x.name] = Yup.string().email("Invalid email addresss`").required("Required"); break;
-      case 'number': obj[x.name] = Yup.number().required("Required"); break;
-      case 'select': obj[x.name] = Yup.string().required("Required"); break;
-      case 'text': obj[x.name] = Yup.string().max(15, "Must be 15 characters or less").required("Required"); break;
+      case 'email': prop = Yup.string().email("Invalid email addresss`"); break;
+      case 'number': prop = Yup.number(); break;
+      case 'select': prop = Yup.string(); break;
+      case 'text': prop = Yup.string().max(15, "Must be 15 characters or less"); break;
     }
+    if (x.required) prop = prop.required(errorMessageRequired);
+    obj[x.name] = prop;
   });
   return  Yup.object(obj);
+  // TODO mas personalización & mostrar o no mostrar ciertos campos según lo que haya en otros
 }
 
 // =========================== Functional Component =========================== //
 
 type FormikBuilderProps = {
   fields: Field[];
+  errorMessageRequired: string;
   initialValues?: {};
   onSubmit: (values: {}) => void;
 };
 
 const FormikBuilder = (props: FormikBuilderProps) => {
-  const { fields, initialValues, onSubmit } = props;
+  const { fields, errorMessageRequired, initialValues, onSubmit } = props;
 
   const handleSubmit = (values: {}) => {
     // TODO si no se ha podido enviar al servidor, mostrar ese error al usuario
@@ -117,10 +148,10 @@ const FormikBuilder = (props: FormikBuilderProps) => {
 
   return (
     <Formik
-      initialValues={initialValues || {}}
-      validationSchema={BuildYup(fields)}
+      initialValues={BuildInitValues(fields, initialValues)}
+      validationSchema={BuildYup(fields, errorMessageRequired)}
       onSubmit={async (values, { setSubmitting }) => {
-        console.log(values);
+        // console.log(values);
         await new Promise((r) => setTimeout(r, 500));
         setSubmitting(false);
         handleSubmit(values);
