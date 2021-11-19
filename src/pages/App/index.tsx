@@ -1,17 +1,19 @@
 // https://codesandbox.io/s/github/tchaumeny/formik-schema/tree/master/demo?file=/src/forms.jsx:1798-1804
 // https://github.com/tchaumeny/formik-schema
 
-import { useState } from "react";
-import FormikBuilder, { Field, FieldType } from "../../components/FormikBuilder";
-import AddFieldToForm from "./AddFieldToForm";
+import FormikBuilder, {  } from "../../components/FormikBuilder";
 
 const App = () => {
-  const [typeSelected, setTypeSelected] = useState<FieldType>('text');
-  const [formFields, setFormFields] = useState<Field[]>([]);
   return (<>
-      <AddFieldToForm onSubmit={(field) => setFormFields([...formFields, field])} />
+      <h1>FORMULARIO</h1>
       <FormikBuilder
-        fields={formFields}
+        fields={[
+          {
+            name: 'aa',
+            label: 'eee',
+            type: 'text',
+          }
+        ]}
         initialValues={{
           nameee: "Lamarr"
         }}
