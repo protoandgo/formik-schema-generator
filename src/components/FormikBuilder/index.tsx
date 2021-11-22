@@ -70,31 +70,32 @@ const FormikBuilder = (props: FormikBuilderProps) => {
   }
 
   const FieldToComponent = (x: Field): React.ReactNode => {
-    const {
-      values: { textA, textB },
-      touched,
-      setFieldValue,
-    } = useFormikContext<any>();
-    const [field, meta] = useField({ name: x.name });
+    // const {
+    //   values: { textA, textB },
+    //   touched,
+    //   setFieldValue,
+    // } = useFormikContext<any>();
+    // const [field, meta] = useField({ name: x.name });
   
-    useEffect(() => {
-      // set the value of textC, based on textA and textB
-      if (
-        textA.trim() !== '' &&
-        textB.trim() !== '' &&
-        touched.textA &&
-        touched.textB
-      ) {
-        setFieldValue(x.name, `textA: ${textA}, textB: ${textB}`);
-      }
-    }, [textB, textA, touched.textA, touched.textB, setFieldValue, x.name]);
+    // useEffect(() => {
+    //   // set the value of textC, based on textA and textB
+    //   if (
+    //     textA.trim() !== '' &&
+    //     textB.trim() !== '' &&
+    //     touched.textA &&
+    //     touched.textB
+    //   ) {
+    //     setFieldValue(x.name, `textA: ${textA}, textB: ${textB}`);
+    //   }
+    // }, [textB, textA, touched.textA, touched.textB, setFieldValue, x.name]);
   
-    return (
-      <>
-        <input {...props} {...field} />
-        {!!meta.touched && !!meta.error && <div>{meta.error}</div>}
-      </>
-    );
+    // return (
+    //   <>
+    //     <input {...props} {...field} />
+    //     {!!meta.touched && !!meta.error && <div>{meta.error}</div>}
+    //   </>
+    // );
+    return <></>;
   }
 
   const BuildFields = (fields: Field[]): React.ReactNode => {
