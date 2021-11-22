@@ -1,6 +1,6 @@
 import { useField } from "formik";
 
-const Select = ({ label, ...props }) => {
+const SelectInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   return (
     <>
@@ -12,4 +12,4 @@ const Select = ({ label, ...props }) => {
   );
 };
 
-export default Select;
+export default SelectInput;

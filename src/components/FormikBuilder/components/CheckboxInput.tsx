@@ -5,7 +5,7 @@ export type CheckboxProps = {
   [x: string]: any;
   name: string;
 }
-const Checkbox = (props: CheckboxProps) => {
+const CheckboxInput = (props: CheckboxProps) => {
   const [field, meta] = useField({...props, type: 'checkbox' });
   return (
     <>
@@ -22,4 +22,4 @@ const Checkbox = (props: CheckboxProps) => {
   );
 };
 
-export default Checkbox;
+export default CheckboxInput;
