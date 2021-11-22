@@ -1,20 +1,23 @@
 // =========================== Field Visibility Filters =========================== //
 
 // SHOW FIELD IF FIELD ___'S VALUE IS less/more/equal TO FIELD ___'S VALUE
-interface Field_VisibilityFilter_ComparisonAny {
+interface Field_VisibilityFilter_FieldAny {
   field: string;
+}
+interface Field_VisibilityFilter_FieldComparisonAny
+  extends Field_VisibilityFilter_FieldAny {
   is: "less than" | "equal" | "more than";
 }
-export interface Field_VisibilityFilter_ComparisonOtherField
-  extends Field_VisibilityFilter_ComparisonAny {
+export interface Field_VisibilityFilter_FieldComparisonOtherField
+  extends Field_VisibilityFilter_FieldComparisonAny {
   otherField: string;
 }
-export interface Field_VisibilityFilter_ComparisonValue
-  extends Field_VisibilityFilter_ComparisonAny {
+export interface Field_VisibilityFilter_FieldComparisonValue
+  extends Field_VisibilityFilter_FieldComparisonAny {
   value: string | (() => string) | number | (() => number); // TODO | date | etc |
 }
-export interface Field_VisibilityFilter_FieldEmpty {
-  field: string;
+export interface Field_VisibilityFilter_FieldEmpty
+  extends Field_VisibilityFilter_FieldAny {
   is: "empty" | "not empty";
 }
 
@@ -32,8 +35,8 @@ interface Field_VisibilityFilter_CurrentUserRole {
 
 // Type to export:
 type Field_VisibilityFilter =
-  | Field_VisibilityFilter_ComparisonOtherField
-  | Field_VisibilityFilter_ComparisonValue
+  | Field_VisibilityFilter_FieldComparisonOtherField
+  | Field_VisibilityFilter_FieldComparisonValue
   | Field_VisibilityFilter_FieldEmpty
   | Field_VisibilityFilter_CurrentUserName
   | Field_VisibilityFilter_CurrentUserRole;
@@ -76,12 +79,13 @@ interface Field_Checkbox extends Field_Any {
 }
 
 // FIELD PROPERTIES FOR TYPE 'SELECT'
+export interface Option {
+  title: string;
+  value: string;
+}
 interface Field_Select extends Field_Any {
   type: "select";
-  options: {
-    value: string;
-    title: string;
-  }[];
+  options: Option[];
 }
 
 // FIELD PROPERTIES FOR TYPE 'DATE'

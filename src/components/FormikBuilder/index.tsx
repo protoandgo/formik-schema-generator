@@ -1,6 +1,6 @@
 // Formik & Yup:
 import { Form, Formik } from "formik";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import * as Yup from "yup";
 import { BooleanSchema, DateSchema, NumberSchema } from "yup";
 import StringSchema from "yup/lib/string";
@@ -9,7 +9,13 @@ import StringSchema from "yup/lib/string";
 import { Checkbox, DateInput, Select, TextInput } from "./components";
 
 // Types:
-import { Field, Field_VisibilityFilter_ComparisonOtherField, Field_VisibilityFilter_ComparisonValue, Field_VisibilityFilter_FieldEmpty, FormSchema } from "./types";
+import {
+  Field,
+  Field_VisibilityFilter_FieldComparisonOtherField,
+  Field_VisibilityFilter_FieldComparisonValue,
+  Field_VisibilityFilter_FieldEmpty,
+  FormSchema,
+} from "./types";
 
 // Functional Component:
 type FormikBuilderProps = {
@@ -59,65 +65,215 @@ const FormikBuilder = (props: FormikBuilderProps) => {
   const ref = useRef<any>(); // any ?
 
   const ShouldBeVisible = (field: Field): boolean => {
-    const formValues = ref?.current?.values;
-    console.log(formValues);
-    if (formValues)
+    const formValues = ref?.current?.values || initialValues;
+    if (formValues) {
+      // console.log("Checking form values");
       field.visibility?.forEach((x) => {
         if (x.hasOwnProperty("field")) {
           if (x.hasOwnProperty("otherField")) {
-            const xAs = x as Field_VisibilityFilter_ComparisonOtherField;
+            const xAs = x as Field_VisibilityFilter_FieldComparisonOtherField;
             switch (xAs.is) {
-              case 'less than':
+              case "less than":
                 return formValues[xAs.field] < formValues[xAs.otherField];
-              case 'equal':
+              case "equal":
                 return formValues[xAs.field] === formValues[xAs.otherField];
-              case 'more than':
+              case "more than":
                 return formValues[xAs.field] > formValues[xAs.otherField];
             }
-          }
-          else if (x.hasOwnProperty("value")) {
-            const xAs = x as Field_VisibilityFilter_ComparisonValue;
+          } else if (x.hasOwnProperty("value")) {
+            const xAs = x as Field_VisibilityFilter_FieldComparisonValue;
             switch (xAs.is) {
-              case 'less than':
+              case "less than":
                 return formValues[xAs.field] < xAs.value;
-              case 'equal':
+              case "equal":
                 return formValues[xAs.field] === xAs.value;
-              case 'more than':
+              case "more than":
                 return formValues[xAs.field] > xAs.value;
             }
-          }
-          else {
+          } else {
             const xAs = x as Field_VisibilityFilter_FieldEmpty;
+            console.log(xAs);
             switch (xAs.is) {
-              case 'empty':
-                return formValues[xAs.field] === '' || {};
-              case 'not empty':
-                return formValues[xAs.field] !== '' || {};
+              case "empty":
+                console.log(xAs.field + " is empty?");
+                return formValues[xAs.field].toString() === "";
+              case "not empty":
+                console.log(
+                  xAs.field +
+                    " is not empty? " +
+                    (formValues[xAs.field].toString() !== "")
+                );
+                return formValues[xAs.field].toString() !== "";
             }
           }
         }
       });
+    }
     return true;
   };
 
+  const [fieldsVisible, setFieldsVisible] = useState<{
+    [x: string]: boolean;
+  }>({});
   const BuildFields = (fields: Field[]): React.ReactNode => {
-    return fields.map((x) => {
-      if (ShouldBeVisible(x)) {
-        switch (x.type) {
-          case "text":
-            return <TextInput key={x.name} {...x} />;
-          // case "textArea":
-          //   return <TextAreaInput key={x.name} {...x} />;
-          case "select":
-            return <Select key={x.name} {...x} />;
-          case "checkbox":
-            return <Checkbox key={x.name} {...x} />;
-          case "date":
-            return <DateInput key={x.name} {...x} />;
-          default:
-            return <></>;
+    // Generate onChange functions
+    // por cada field,
+    //   por cada visibility,
+    //     si depende de otro field,
+    //       apartar ese visibility a una lista para ese field concreto (si ya existe, push)
+    // por cada field de esa lista,
+    //   generar un onBlur basado en esas visibilities
+    const onBlurFunctions: { [x: string]: () => void } = {};
+    fields.forEach((field) => {
+      // const formValues = ref?.current?.values || initialValues;
+      field.visibility?.forEach((x) => {
+        if (x.hasOwnProperty("field")) {
+          if (x.hasOwnProperty("otherField")) {
+            const xAs = x as Field_VisibilityFilter_FieldComparisonOtherField;
+            switch (xAs.is) {
+              case "less than":
+                // return formValues[xAs.field] < formValues[xAs.otherField];
+                onBlurFunctions[field.name] = () => {
+                  const formValues = ref?.current?.values || initialValues;
+                  setFieldsVisible({
+                    ...fieldsVisible,
+                    [xAs.field]:
+                      (formValues || initialValues)[xAs.field] <
+                      (formValues || initialValues)[xAs.otherField],
+                  });
+                };
+                break;
+              case "equal":
+                // return formValues[xAs.field] === formValues[xAs.otherField];
+                onBlurFunctions[field.name] = () => {
+                  const formValues = ref?.current?.values || initialValues;
+                  setFieldsVisible({
+                    ...fieldsVisible,
+                    [xAs.field]:
+                      (formValues || initialValues)[xAs.field] ===
+                      (formValues || initialValues)[xAs.otherField],
+                  });
+                };
+                break;
+              case "more than":
+                // return formValues[xAs.field] > formValues[xAs.otherField];
+                onBlurFunctions[field.name] = () => {
+                  const formValues = ref?.current?.values || initialValues;
+                  setFieldsVisible({
+                    ...fieldsVisible,
+                    [xAs.field]:
+                      (formValues || initialValues)[xAs.field] >
+                      (formValues || initialValues)[xAs.otherField],
+                  });
+                };
+                break;
+            }
+          } else if (x.hasOwnProperty("value")) {
+            const xAs = x as Field_VisibilityFilter_FieldComparisonValue;
+            switch (xAs.is) {
+              case "less than":
+                // return formValues[xAs.field] < xAs.value;
+                onBlurFunctions[field.name] = () => {
+                  const formValues = ref?.current?.values || initialValues;
+                  setFieldsVisible({
+                    ...fieldsVisible,
+                    [xAs.field]:
+                      (formValues || initialValues)[xAs.field] < xAs.value,
+                  });
+                };
+                break;
+              case "equal":
+                // return formValues[xAs.field] === xAs.value;
+                onBlurFunctions[field.name] = () => {
+                  const formValues = ref?.current?.values || initialValues;
+                  setFieldsVisible({
+                    ...fieldsVisible,
+                    [xAs.field]:
+                      (formValues || initialValues)[xAs.field] === xAs.value,
+                  });
+                };
+                break;
+              case "more than":
+                // return formValues[xAs.field] > xAs.value;
+                onBlurFunctions[field.name] = () => {
+                  const formValues = ref?.current?.values || initialValues;
+                  setFieldsVisible({
+                    ...fieldsVisible,
+                    [xAs.field]:
+                      (formValues || initialValues)[xAs.field] > xAs.value,
+                  });
+                };
+                break;
+            }
+          } else {
+            const xAs = x as Field_VisibilityFilter_FieldEmpty;
+            console.log(xAs);
+            switch (xAs.is) {
+              case "empty":
+                // console.log(xAs.field + " is empty?");
+                // return formValues[xAs.field].toString() === "";
+                onBlurFunctions[field.name] = () => {
+                  const formValues = ref?.current?.values || initialValues;
+                  setFieldsVisible({
+                    ...fieldsVisible,
+                    [xAs.field]:
+                      (formValues || initialValues)[xAs.field] === "",
+                  });
+                };
+                break;
+              case "not empty":
+                // console.log( xAs.field + " is not empty? " + (formValues[xAs.field].toString() !== ""));
+                // return formValues[xAs.field].toString() !== "";
+                onBlurFunctions[field.name] = () => {
+                  const formValues = ref?.current?.values || initialValues;
+                  setFieldsVisible({
+                    ...fieldsVisible,
+                    [xAs.field]:
+                      (formValues || initialValues)[xAs.field] !== "",
+                  });
+                };
+                break;
+            }
+          }
         }
-      } else return <></>;
+      });
+
+      // onBlurFunctions[field.name] = () => {
+      //   // if (ref?.current?.values) console.log(ref.current.values);
+      //   // console.log(field.visibility);
+      //   // field?.visibility?.map(x => {
+      //   //   x.
+      //   // });
+      //   return ShouldBeVisible(field);
+      // };
+    });
+    // R
+    return fields.map((x) => {
+      // if (ShouldBeVisible(x)) {
+      // console.log(x.name + " should be visible");
+      // console.log(x.name + " --- " + fieldsVisible[x.name]);
+      console.log(fieldsVisible);
+      const additionalProps = {
+        // visible: ShouldBeVisible(x),
+        visible: fieldsVisible[x.name],
+        key: x.name,
+        onBlur: onBlurFunctions[x.name],
+      };
+      switch (x.type) {
+        case "text":
+          return <TextInput {...additionalProps} {...x} />;
+        // case "textArea":
+        //   return <TextAreaInput key={x.name} {...x} />;
+        case "select":
+          return <Select {...additionalProps} {...x} />;
+        case "checkbox":
+          return <Checkbox {...additionalProps} {...x} />;
+        case "date":
+          return <DateInput {...additionalProps} {...x} />;
+        default:
+          return <></>;
+      }
+      // } else return <></>;
     });
   };
 
@@ -184,6 +340,3 @@ const FormikBuilder = (props: FormikBuilderProps) => {
 };
 
 export default FormikBuilder;
-function FormikProps<T>(): any {
-  throw new Error("Function not implemented.");
-}
