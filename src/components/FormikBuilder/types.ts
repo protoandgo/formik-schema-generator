@@ -87,10 +87,10 @@ interface Field_Select extends Field_Any {
 // FIELD PROPERTIES FOR TYPE 'DATE'
 interface Field_Date extends Field_Any {
   type: "date";
-  datePickerProps: {
-    // ...;
-  };
-  helpText: string;
+  // datePickerProps: {
+  //   // ...;
+  // };
+  // helpText: string;
 }
 
 // Type to export:

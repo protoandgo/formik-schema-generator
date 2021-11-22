@@ -1,4 +1,4 @@
-import { Input, Typography } from 'antd';
+import { Input } from 'antd';
 
 const { TextArea } = Input;
 

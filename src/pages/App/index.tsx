@@ -25,6 +25,31 @@ const exampleSchema: FormSchema = {
         },
       ],
     },
+    {
+      name: "dayy",
+      label: "DIA : ",
+      type: "date",
+    },
+    {
+      name: "selecttt",
+      label: "SELECIONA: ",
+      type: "select",
+      options: [
+        {
+          title: "EEE",
+          value: "eee",
+        },
+        {
+          title: "OOO",
+          value: "ooo",
+        },
+      ]
+    },
+    {
+      name: "checkboxxxx",
+      label: "SI O NO  : ",
+      type: "checkbox",
+    },
   ],
 };
 

@@ -6,7 +6,7 @@ import { BooleanSchema, DateSchema, NumberSchema } from "yup";
 import StringSchema from "yup/lib/string";
 
 // Component for different types of fields:
-import { Checkbox, Select, TextInput } from "./components";
+import { Checkbox, DateInput, Select, TextInput } from "./components";
 
 // Types:
 import { Field, Field_VisibilityFilter_ComparisonOtherField, Field_VisibilityFilter_ComparisonValue, Field_VisibilityFilter_FieldEmpty, FormSchema } from "./types";
@@ -106,10 +106,14 @@ const FormikBuilder = (props: FormikBuilderProps) => {
         switch (x.type) {
           case "text":
             return <TextInput key={x.name} {...x} />;
+          // case "textArea":
+          //   return <TextAreaInput key={x.name} {...x} />;
           case "select":
             return <Select key={x.name} {...x} />;
           case "checkbox":
             return <Checkbox key={x.name} {...x} />;
+          case "date":
+            return <DateInput key={x.name} {...x} />;
           default:
             return <></>;
         }
