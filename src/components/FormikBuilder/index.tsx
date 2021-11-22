@@ -6,7 +6,7 @@ import { BooleanSchema, DateSchema, NumberSchema } from "yup";
 import StringSchema from "yup/lib/string";
 
 // Component for different types of fields:
-import { Checkbox, DateInput, Select, TextInput } from "./components";
+import { CheckboxInput, DateInput, SelectInput, TextInput } from "./components";
 
 // Types:
 import {
@@ -65,36 +65,37 @@ const FormikBuilder = (props: FormikBuilderProps) => {
 
   const ref = useRef<any>(); // any ?
 
-  const FilterPasses = (filter: Field_VisibilityFilter) => {
+  const FilterPasses = (filter: Field_VisibilityFilter, values: any) => {
     const variablesItDependsOn = [];
   }
-
+// [propName: string]
   const FieldToComponent = (x: Field): React.ReactNode => {
-    // const {
-    //   values: { textA, textB },
-    //   touched,
-    //   setFieldValue,
-    // } = useFormikContext<any>();
-    // const [field, meta] = useField({ name: x.name });
+    const {
+      values,
+      touched,
+      setFieldValue,
+    } = useFormikContext<any>();
+    const [field, meta] = useField({ name: x.name });
   
-    // useEffect(() => {
-    //   // set the value of textC, based on textA and textB
-    //   if (
-    //     textA.trim() !== '' &&
-    //     textB.trim() !== '' &&
-    //     touched.textA &&
-    //     touched.textB
-    //   ) {
-    //     setFieldValue(x.name, `textA: ${textA}, textB: ${textB}`);
-    //   }
-    // }, [textB, textA, touched.textA, touched.textB, setFieldValue, x.name]);
+    useEffect(() => {
+      // set the value of textC, based on textA and textB
+      if (x.visibility?.forEach(filter => FilterPasses(filter, values)))
+      if (
+        values.textA.trim() !== '' &&
+        values.textB.trim() !== '' &&
+        touched.textA &&
+        touched.textB
+      ) {
+        setFieldValue(x.name, `textA: ${textA}, textB: ${textB}`);
+      }
+    }, [textB, textA, touched.textA, touched.textB, setFieldValue, x.name]);
   
-    // return (
-    //   <>
-    //     <input {...props} {...field} />
-    //     {!!meta.touched && !!meta.error && <div>{meta.error}</div>}
-    //   </>
-    // );
+    return (
+      <>
+        <input {...props} {...field} />
+        {!!meta.touched && !!meta.error && <div>{meta.error}</div>}
+      </>
+    );
     return <></>;
   }
 
