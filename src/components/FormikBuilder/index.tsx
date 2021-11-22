@@ -131,15 +131,20 @@ const BuildYup = (fields: Field[], errorMessageRequired: string) => {
 
 // =========================== Functional Component =========================== //
 
-type FormikBuilderProps = {
+export type FormSchema = {
   fields: Field[];
+  // TODO ????
+}
+type FormikBuilderProps = {
+  schema: FormSchema;
   errorMessageRequired: string;
   initialValues?: {};
   onSubmit: (values: {}) => void;
 };
 
 const FormikBuilder = (props: FormikBuilderProps) => {
-  const { fields, errorMessageRequired, initialValues, onSubmit } = props;
+  const { errorMessageRequired, initialValues, onSubmit } = props;
+  const fields = props.schema.fields;
 
   const handleSubmit = (values: {}) => {
     // TODO si no se ha podido enviar al servidor, mostrar ese error al usuario
