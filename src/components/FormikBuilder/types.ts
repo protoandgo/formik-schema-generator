@@ -66,7 +66,7 @@ interface Field_Any {
 
 // FIELD PROPERTIES FOR TYPES 'TEXT', 'NUMBER', 'EMAIL', 'PASSWORD' AND 'PHONE'
 interface Field_TextNumberEmail extends Field_Any {
-  type: "text" | "number" | "email" | "password" | "phone";
+  type: "text" | "number" | "email" | "password" | "phone" | "textarea";
 }
 
 // FIELD PROPERTIES FOR TYPE 'CHECKBOX'
@@ -76,12 +76,13 @@ interface Field_Checkbox extends Field_Any {
 }
 
 // FIELD PROPERTIES FOR TYPE 'SELECT'
+export type Option = {
+  title: string;
+  value: string;
+}
 interface Field_Select extends Field_Any {
   type: "select";
-  options: {
-    value: string;
-    title: string;
-  }[];
+  options: Option[];
 }
 
 // FIELD PROPERTIES FOR TYPE 'DATE'

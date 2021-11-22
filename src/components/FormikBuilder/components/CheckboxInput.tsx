@@ -4,14 +4,14 @@ import { useField } from "formik";
 export type CheckboxProps = {
   [x: string]: any;
   name: string;
+  label: string;
 }
 const CheckboxInput = (props: CheckboxProps) => {
-  const [field, meta] = useField({...props, type: 'checkbox' });
+  const [field, meta, label] = useField({...props, type: 'checkbox' });
   return (
     <>
-        <Checkbox {...field} {...props} type="checkbox" >{props.label}</Checkbox>
-      {meta.touched &&
-        meta.error
+        <Checkbox {...field} {...props} type="checkbox" >{label}</Checkbox>
+      {meta.touched && meta.error
         ? <Typography style={{ color: 'darkred' }}>{meta.error}</Typography>
         : null}
       <br />
