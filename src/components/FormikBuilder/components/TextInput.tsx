@@ -4,19 +4,23 @@ import { useField } from "formik";
 type TextInputProps = {
   [x: string]: any;
   name: string;
-  label: string;
+  onBlur: (() => void);
+  visible: boolean;
 }
 const TextInput = (props: TextInputProps) => {
-  const [field, meta, label] = useField({...props, type: 'text'});
+  const [field, meta] = useField(props);
+  // console.log(props.name + " visible? " + props.visible);
+  if (props.onBlur) props.onBlur();
   return (
-    <>
-      <label htmlFor={props.id || props.name}>{label}</label>
-       <Input {...field} {...props} type= 'text'/>
-      {meta.touched && meta.error
-        ? <Typography style={{ color: "darkred" }}>{meta.error}</Typography>
-        : null}
+    <div hidden={props.visible!= null && !props.visible}>
+      <label htmlFor={props.id || props.name}>{props.label}</label>
+      <Input {...field} onBlur={e => {
+        field.onBlur(e);
+        if (props.onBlur) props.onBlur();
+      }} />
+      {meta.touched && meta.error ? <div>{meta.error}</div> : null}
       <br />
-    </>
+    </div>
   );
 };
 
