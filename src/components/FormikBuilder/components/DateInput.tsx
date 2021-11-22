@@ -1,5 +1,6 @@
-import { DatePicker, Input, Typography } from "antd";
+import { DatePicker } from "antd";
 import { useField, useFormikContext } from "formik";
+import moment from "moment";
 
 type DateInputProps = {
     [x: string]: any;
@@ -15,7 +16,7 @@ const DateInput = (props: DateInputProps) => {
       <DatePicker
         {...field}
         {...props}
-        value={(field.value && new Date(field.value)) || null}
+        value={(field.value && moment(field.value)) || null}
         onChange={(val) => {
           setFieldValue(field.name, val);
         }}
