@@ -1,7 +1,7 @@
 import { Select, Typography } from "antd";
 import { FieldInputProps, FieldMetaProps, useField } from "formik";
 import React from "react";
-import { Option } from "../types"
+import { Option } from "../utils/types"
 
 const option: Option = {
   title: "",
