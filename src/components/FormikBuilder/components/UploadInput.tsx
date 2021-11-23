@@ -1,13 +1,10 @@
 import { Upload, message, Button } from 'antd';
-import { UploadOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { LoadingOutlined, InboxOutlined} from '@ant-design/icons'
+import { useField, useFormikContext } from 'formik';
+
 
 // const mime = require('mime-types');
-
-function getBase64(file: Blob, callback: (arg0: string | ArrayBuffer | null) => any) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(file);
-};
+const { Dragger } = Upload;
 
 function beforeUpload(file: { type: string; }) {
   const isValidFile = file.type === "" || file.type === "image/png";
@@ -20,6 +17,14 @@ function beforeUpload(file: { type: string; }) {
 //   }
   return isValidFile;  //&& isLt2M
 }
+
+// function getBase64(file: Blob, callback: (arg0: string | ArrayBuffer | null) => any) {
+//   const reader = new FileReader();  
+//   reader.addEventListener("load", () => callback(reader.result));
+//   reader.readAsDataURL(file);
+// };
+
+
 
 
 // const props = {
@@ -46,11 +51,40 @@ function beforeUpload(file: { type: string; }) {
 //   </Upload>,
 //   document.getElementById("container")
 // );
+const handleUpload = (uploadedFile: Blob) => {
+  
+}
+type UploadInputProps = {
+  [x: string]: any;
+  name: string;
+};
+const UploadInput = (props: UploadInputProps) => {
+  const [field, meta] = useField({ ...props });
+  const { setFieldValue } = useFormikContext();
+  const file = props.name
 
-const UploadInput = () => {
     return (
-        <></>
-    )
+      <>
+        <Dragger
+          {...field}
+          {...props}
+          // value={Blob || null}
+          //handleUpload={handleUpload(uploadedFile)}
+          onChange={(val) => {
+            setFieldValue(file, val.file);
+          }}
+        >
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+        </Dragger>
+      </>
+    );
 }
 
 export default UploadInput;
+
+

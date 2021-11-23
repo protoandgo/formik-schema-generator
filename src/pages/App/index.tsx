@@ -6,6 +6,8 @@ import React from "react";
 import FormikBuilder from "../../components/FormikBuilder";
 import { FormSchema } from "../../components/FormikBuilder/utils/types";
 import TestForm from "../../TestPage/TestForm";
+import UploadInput from "../../components/FormikBuilder/components/UploadInput";
+
 
 // Form Schemas will be stored in a separate file
 const exampleSchema: FormSchema = {
@@ -75,7 +77,7 @@ const App = () => {
           initialValues={exampleData}
           onSubmit={(values) => console.log(values)}
         />
-        {/* <TestForm /> */}
+        {
       </Card>
     </React.Fragment>
   );
