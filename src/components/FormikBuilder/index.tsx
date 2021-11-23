@@ -1,16 +1,24 @@
 // Formik & Yup:
-import { Form, Formik } from "formik";
-import { useRef, useState } from "react";
+import {
+  Form,
+  Formik,
+  FormikTouched,
+  useField,
+  useFormikContext,
+} from "formik";
+import React, { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import { BooleanSchema, DateSchema, NumberSchema } from "yup";
 import StringSchema from "yup/lib/string";
 
 // Component for different types of fields:
-import { Checkbox, DateInput, Select, TextInput } from "./components";
+import { CheckboxInput, DateInput, SelectInput, TextInput } from "./components";
 
 // Types:
 import {
   Field,
+  Field_VisibilityFilter,
+  Field_VisibilityFilter_FieldAny,
   Field_VisibilityFilter_FieldComparisonOtherField,
   Field_VisibilityFilter_FieldComparisonValue,
   Field_VisibilityFilter_FieldEmpty,
@@ -64,217 +72,93 @@ const FormikBuilder = (props: FormikBuilderProps) => {
 
   const ref = useRef<any>(); // any ?
 
-  const ShouldBeVisible = (field: Field): boolean => {
-    const formValues = ref?.current?.values || initialValues;
-    if (formValues) {
-      // console.log("Checking form values");
-      field.visibility?.forEach((x) => {
-        if (x.hasOwnProperty("field")) {
-          if (x.hasOwnProperty("otherField")) {
-            const xAs = x as Field_VisibilityFilter_FieldComparisonOtherField;
-            switch (xAs.is) {
-              case "less than":
-                return formValues[xAs.field] < formValues[xAs.otherField];
-              case "equal":
-                return formValues[xAs.field] === formValues[xAs.otherField];
-              case "more than":
-                return formValues[xAs.field] > formValues[xAs.otherField];
-            }
-          } else if (x.hasOwnProperty("value")) {
-            const xAs = x as Field_VisibilityFilter_FieldComparisonValue;
-            switch (xAs.is) {
-              case "less than":
-                return formValues[xAs.field] < xAs.value;
-              case "equal":
-                return formValues[xAs.field] === xAs.value;
-              case "more than":
-                return formValues[xAs.field] > xAs.value;
-            }
-          } else {
-            const xAs = x as Field_VisibilityFilter_FieldEmpty;
-            console.log(xAs);
-            switch (xAs.is) {
-              case "empty":
-                console.log(xAs.field + " is empty?");
-                return formValues[xAs.field].toString() === "";
-              case "not empty":
-                console.log(
-                  xAs.field +
-                    " is not empty? " +
-                    (formValues[xAs.field].toString() !== "")
-                );
-                return formValues[xAs.field].toString() !== "";
-            }
-          }
-        }
-      });
-    }
-    return true;
-  };
+  const FilterPasses = (filter: Field_VisibilityFilter, deps: any) => {};
 
-  const [fieldsVisible, setFieldsVisible] = useState<{
-    [x: string]: boolean;
-  }>({});
-  const BuildFields = (fields: Field[]): React.ReactNode => {
-    // Generate onChange functions
-    // por cada field,
-    //   por cada visibility,
-    //     si depende de otro field,
-    //       apartar ese visibility a una lista para ese field concreto (si ya existe, push)
-    // por cada field de esa lista,
-    //   generar un onBlur basado en esas visibilities
-    const onBlurFunctions: { [x: string]: () => void } = {};
-    fields.forEach((field) => {
-      // const formValues = ref?.current?.values || initialValues;
-      field.visibility?.forEach((x) => {
-        if (x.hasOwnProperty("field")) {
-          if (x.hasOwnProperty("otherField")) {
-            const xAs = x as Field_VisibilityFilter_FieldComparisonOtherField;
-            switch (xAs.is) {
-              case "less than":
-                // return formValues[xAs.field] < formValues[xAs.otherField];
-                onBlurFunctions[field.name] = () => {
-                  const formValues = ref?.current?.values || initialValues;
-                  setFieldsVisible({
-                    ...fieldsVisible,
-                    [xAs.field]:
-                      (formValues || initialValues)[xAs.field] <
-                      (formValues || initialValues)[xAs.otherField],
-                  });
-                };
-                break;
-              case "equal":
-                // return formValues[xAs.field] === formValues[xAs.otherField];
-                onBlurFunctions[field.name] = () => {
-                  const formValues = ref?.current?.values || initialValues;
-                  setFieldsVisible({
-                    ...fieldsVisible,
-                    [xAs.field]:
-                      (formValues || initialValues)[xAs.field] ===
-                      (formValues || initialValues)[xAs.otherField],
-                  });
-                };
-                break;
-              case "more than":
-                // return formValues[xAs.field] > formValues[xAs.otherField];
-                onBlurFunctions[field.name] = () => {
-                  const formValues = ref?.current?.values || initialValues;
-                  setFieldsVisible({
-                    ...fieldsVisible,
-                    [xAs.field]:
-                      (formValues || initialValues)[xAs.field] >
-                      (formValues || initialValues)[xAs.otherField],
-                  });
-                };
-                break;
-            }
-          } else if (x.hasOwnProperty("value")) {
-            const xAs = x as Field_VisibilityFilter_FieldComparisonValue;
-            switch (xAs.is) {
-              case "less than":
-                // return formValues[xAs.field] < xAs.value;
-                onBlurFunctions[field.name] = () => {
-                  const formValues = ref?.current?.values || initialValues;
-                  setFieldsVisible({
-                    ...fieldsVisible,
-                    [xAs.field]:
-                      (formValues || initialValues)[xAs.field] < xAs.value,
-                  });
-                };
-                break;
-              case "equal":
-                // return formValues[xAs.field] === xAs.value;
-                onBlurFunctions[field.name] = () => {
-                  const formValues = ref?.current?.values || initialValues;
-                  setFieldsVisible({
-                    ...fieldsVisible,
-                    [xAs.field]:
-                      (formValues || initialValues)[xAs.field] === xAs.value,
-                  });
-                };
-                break;
-              case "more than":
-                // return formValues[xAs.field] > xAs.value;
-                onBlurFunctions[field.name] = () => {
-                  const formValues = ref?.current?.values || initialValues;
-                  setFieldsVisible({
-                    ...fieldsVisible,
-                    [xAs.field]:
-                      (formValues || initialValues)[xAs.field] > xAs.value,
-                  });
-                };
-                break;
-            }
-          } else {
-            const xAs = x as Field_VisibilityFilter_FieldEmpty;
-            console.log(xAs);
-            switch (xAs.is) {
-              case "empty":
-                // console.log(xAs.field + " is empty?");
-                // return formValues[xAs.field].toString() === "";
-                onBlurFunctions[field.name] = () => {
-                  const formValues = ref?.current?.values || initialValues;
-                  setFieldsVisible({
-                    ...fieldsVisible,
-                    [xAs.field]:
-                      (formValues || initialValues)[xAs.field] === "",
-                  });
-                };
-                break;
-              case "not empty":
-                // console.log( xAs.field + " is not empty? " + (formValues[xAs.field].toString() !== ""));
-                // return formValues[xAs.field].toString() !== "";
-                onBlurFunctions[field.name] = () => {
-                  const formValues = ref?.current?.values || initialValues;
-                  setFieldsVisible({
-                    ...fieldsVisible,
-                    [xAs.field]:
-                      (formValues || initialValues)[xAs.field] !== "",
-                  });
-                };
-                break;
-            }
-          }
-        }
-      });
+  const FieldToComponent = (
+    fieldParams: Field,
+    deps: (boolean | FormikTouched<any> | FormikTouched<any>[] | undefined)[]
+  ): React.ReactNode => {
 
-      // onBlurFunctions[field.name] = () => {
-      //   // if (ref?.current?.values) console.log(ref.current.values);
-      //   // console.log(field.visibility);
-      //   // field?.visibility?.map(x => {
-      //   //   x.
-      //   // });
-      //   return ShouldBeVisible(field);
-      // };
-    });
-    // R
-    return fields.map((x) => {
-      // if (ShouldBeVisible(x)) {
-      // console.log(x.name + " should be visible");
-      // console.log(x.name + " --- " + fieldsVisible[x.name]);
-      console.log(fieldsVisible);
-      const additionalProps = {
-        // visible: ShouldBeVisible(x),
-        visible: fieldsVisible[x.name],
-        key: x.name,
-        onBlur: onBlurFunctions[x.name],
-      };
-      switch (x.type) {
+    // Component is part of a Formik form
+    const [field, meta] = useField({ name: fieldParams.name });
+
+    // Component visibility
+    const [visible, setVisible] = useState(true);
+
+    // Change visibility when specific fields change
+    useEffect(() => {
+      if (
+        fieldParams.visibility?.forEach((filter) => FilterPasses(filter, deps))
+      )
+        setVisible(true);
+      else setVisible(false);
+    }, [deps, fieldParams.visibility]);
+
+    // Component by type will need to know that it is in a Formik form
+    const additionalProps = {
+      field: field,
+      meta: meta,
+    };
+
+    // Get Component by type
+    const componentByType = () => {
+      switch (fieldParams.type) {
         case "text":
-          return <TextInput {...additionalProps} {...x} />;
+          return <TextInput {...additionalProps} {...fieldParams} />;
         // case "textArea":
-        //   return <TextAreaInput key={x.name} {...x} />;
+        //   return <TextAreaInput key={x.name} {...fieldParams} />;
         case "select":
-          return <Select {...additionalProps} {...x} />;
+          return <SelectInput {...additionalProps} {...fieldParams} />;
         case "checkbox":
-          return <Checkbox {...additionalProps} {...x} />;
+          return <CheckboxInput {...additionalProps} {...fieldParams} />;
         case "date":
-          return <DateInput {...additionalProps} {...x} />;
+          return <DateInput {...additionalProps} {...fieldParams} />;
         default:
           return <></>;
       }
-      // } else return <></>;
-    });
+    };
+
+    // Return the Component by type with key and visibility
+    return (
+      <div key={fieldParams.name} hidden={!visible}>
+        {componentByType()}
+      </div>
+    );
+  };
+
+  const BuildFields = (fields: Field[]): React.ReactNode => {
+    // const { values, touched } = useFormikContext<any>();
+    // return fields.map((fieldParams) => {
+    //   // Gather the fields that are related to this field's visibility
+    //   // to use as useEffect deps to check on them everytime they change
+    //   const deps: (
+    //     | boolean
+    //     | FormikTouched<any>
+    //     | FormikTouched<any>[]
+    //     | undefined
+    //   )[] = [];
+    //   fieldParams.visibility?.forEach((filter) => {
+    //     if (filter.hasOwnProperty("field"))
+    //       deps.push(values[(filter as Field_VisibilityFilter_FieldAny).field]);
+    //     deps.push(touched[(filter as Field_VisibilityFilter_FieldAny).field]);
+    //     if (filter.hasOwnProperty("otherField"))
+    //       deps.push(
+    //         values[
+    //           (filter as Field_VisibilityFilter_FieldComparisonOtherField)
+    //             .otherField
+    //         ]
+    //       );
+    //     deps.push(
+    //       touched[
+    //         (filter as Field_VisibilityFilter_FieldComparisonOtherField)
+    //           .otherField
+    //       ]
+    //     );
+    //   });
+    //   // Return component by type with useField
+    //   return FieldToComponent(fieldParams, deps);
+    // });
+    return <React.Fragment>WIP (Esto no es un error, funciona todo bien, lo que pasa es que esta parte está a medias)</React.Fragment>
   };
 
   // =========================== Build Validation by Field =========================== //

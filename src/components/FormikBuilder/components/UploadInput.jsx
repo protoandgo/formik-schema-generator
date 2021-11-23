@@ -3,13 +3,13 @@ import { UploadOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons
 
 // const mime = require('mime-types');
 
-function getBase64(file: Blob, callback: (arg0: string | ArrayBuffer | null) => any) {
+function getBase64(file, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(file);
 };
 
-function beforeUpload(file: { type: string; }) {
+function beforeUpload(file) {
   const isValidFile = file.type === "" || file.type === "image/png";
   if (!isValidFile) {
     message.error("You can only upload 'step', 'stp','sldprt', 'ipt', 'prt', 'sat', 'catpart', 'x_t', 'x_b', 'pdf','3dm', file!");
