@@ -7,10 +7,13 @@ export type CheckboxProps = {
   label: string;
 }
 const CheckboxInput = (props: CheckboxProps) => {
-  const [field, meta, label] = useField({...props, type: 'checkbox' });
+  // const [field, meta, label] = useField({...props, type: 'checkbox' });
+  const { field, meta } = props;
+  const { label } = props;
+
   return (
     <>
-        <Checkbox {...field} {...props} type="checkbox" >{label}</Checkbox>
+        <Checkbox {...field} type="checkbox" >{label}</Checkbox>
       {meta.touched && meta.error
         ? <Typography style={{ color: 'darkred' }}>{meta.error}</Typography>
         : null}

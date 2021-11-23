@@ -1,7 +1,7 @@
 // =========================== Field Visibility Filters =========================== //
 
 // SHOW FIELD IF FIELD ___'S VALUE IS less/more/equal TO FIELD ___'S VALUE
-interface Field_VisibilityFilter_FieldAny {
+export interface Field_VisibilityFilter_FieldAny {
   field: string;
 }
 interface Field_VisibilityFilter_FieldComparisonAny

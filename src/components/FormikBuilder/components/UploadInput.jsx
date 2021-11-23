@@ -1,7 +1,7 @@
 import { Upload, message, Button } from 'antd';
 import { UploadOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 
-const mime = require('mime-types');
+// const mime = require('mime-types');
 
 function getBase64(file, callback) {
   const reader = new FileReader();

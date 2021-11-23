@@ -1,6 +1,6 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { TextInput, Select, Checkbox } from "../components/FormikBuilder/components";
+import { TextInput, SelectInput, CheckboxInput } from "../components/FormikBuilder/components";
 
 export const TestForm = () => {
   return (
@@ -44,16 +44,16 @@ export const TestForm = () => {
           type="email"
           placeholder="jane@formik.com"
         />
-        <Select label="Job Type" name="jobType">
+        {/* <SelectInput label="Job Type" name="jobType">
           <option value="">Select a job type</option>
           <option value="designer">Designer</option>
           <option value="development">Developer</option>
           <option value="product">Product Manager</option>
           <option value="other">Other</option>
-        </Select>
-        <Checkbox name="acceptedTerms">
+        </SelectInput>
+        <CheckboxInput name="acceptedTerms">
           I accept the terms and conditions
-        </Checkbox>
+        </CheckboxInput> */}
 
         <button type="submit">Submit</button>
       </Form>
