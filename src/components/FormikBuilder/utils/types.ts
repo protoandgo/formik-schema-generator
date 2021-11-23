@@ -68,15 +68,15 @@ interface Field_Any {
 }
 
 // FIELD PROPERTIES FOR TYPES 'TEXT', 'NUMBER', 'EMAIL', 'PASSWORD' AND 'PHONE'
-interface Field_TextNumberEmail extends Field_Any {
-  type: "text" | "number" | "email" | "password" | "phone" | "textarea";
+interface Field_GroupOne extends Field_Any {
+  type: "text" | "number" | "email" | "password" | "phone" | "textarea" | "checkbox";
 }
 
 // FIELD PROPERTIES FOR TYPE 'CHECKBOX'
-interface Field_Checkbox extends Field_Any {
-  type: "checkbox";
-  startChecked?: boolean;
-}
+// interface Field_Checkbox extends Field_Any {
+//   type: "checkbox";
+//   startChecked?: boolean;
+// }
 
 // FIELD PROPERTIES FOR TYPE 'SELECT'
 export type Option = {
@@ -98,7 +98,7 @@ interface Field_Date extends Field_Any {
 }
 
 // Type to export:
-type Field = Field_TextNumberEmail | Field_Checkbox | Field_Select | Field_Date;
+type Field = Field_GroupOne /*| Field_Checkbox*/ | Field_Select | Field_Date;
 
 // =========================== Schema =========================== //
 
