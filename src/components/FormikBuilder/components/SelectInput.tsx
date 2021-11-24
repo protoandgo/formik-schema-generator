@@ -1,19 +1,12 @@
 import { Select, Typography } from "antd";
 import { FieldInputProps, FieldMetaProps, useField } from "formik";
 import React from "react";
-import { FB_Field_Select_Option } from "../utils/types"
-
-const option: FB_Field_Select_Option = {
-  title: "",
-
-  value: "",
-};
 
 type SelectInputProps = {
   [x: string]: any;
   name: string;
   label?: string;
-  options: FB_Field_Select_Option[];
+  options: { [value: string]: string };
   // field: FieldInputProps<any>;
   // meta: FieldMetaProps<any>;
 };
@@ -29,7 +22,7 @@ const SelectInput = (props: SelectInputProps) => {
         <Typography>{label}</Typography>
       </label>
       <Select style={{ width: "100%" }} {...field}>
-        {options.map((x) => (
+        {options.map((x) => ( // MAP THROUGH KEYS INSTEAD <-------------
           <Select.Option key={x.value} value={x.value}>
             {x.title}
           </Select.Option>

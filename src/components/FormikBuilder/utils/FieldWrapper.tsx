@@ -1,5 +1,5 @@
-import { FieldInputProps, FieldMetaProps, useField, useFormikContext } from "formik";
-import { useState } from "react";
+import { FieldInputProps, FieldMetaProps, FormikContextType, useField, useFormikContext } from "formik";
+import React, { useState } from "react";
 import {
   TextInput,
   SelectInput,
@@ -7,9 +7,7 @@ import {
   DateInput,
 } from "../components";
 import { conslog } from "./testUtil";
-import {
-  FB_Field,
-} from "./types";
+import { FieldSchema } from "./types";
 
 
 // const FilterPasses = (filter: FB_Field_VisibilityFilter, deps: any) => {
@@ -53,9 +51,10 @@ import {
 // };
 
 const FieldWrapper = (props: {
-  fieldParams: FB_Field;
-  field: FieldInputProps<any>;
-  meta: FieldMetaProps<any>;
+  fieldParams: FieldSchema;
+  // field: FieldInputProps<any>;
+  // meta: FieldMetaProps<any>;
+  formikContext: FormikContextType<typeof fieldParams>;
   
 }) => {
   const { fieldParams } = props;
@@ -87,7 +86,7 @@ const FieldWrapper = (props: {
       // case "upload":
       //   return <UploadInput {...additionalProps} {...fieldParams} />
       default:
-        return <></>;
+        return <React.Fragment></React.Fragment>;
     }
   };
 
