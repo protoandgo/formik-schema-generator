@@ -16,14 +16,14 @@ const exampleSchema: FormSchema = {
       name: "firstName",
       label: "First Name: ",
       type: "text",
-      required: true,
+      // required: true,
     },
     {
       name: "secondName",
       label: "Second Name: ",
       type: "text",
-      required: false,
-      visibility: [
+      // required: false,
+      visibleWhen: [
         {
           field: "firstName",
           is: "not empty",
@@ -77,7 +77,6 @@ const App = () => {
           initialValues={exampleData}
           onSubmit={(values) => console.log(values)}
         />
-        {
       </Card>
     </React.Fragment>
   );
