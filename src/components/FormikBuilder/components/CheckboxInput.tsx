@@ -3,7 +3,7 @@ import { Checkbox, Typography } from "antd";
 export type CheckboxProps = {
   [x: string]: any;
   name: string;
-  label: string;
+  label?: string;
 }
 const CheckboxInput = (props: CheckboxProps) => {
   const { field, meta } = props;

@@ -1,9 +1,9 @@
 import { Select, Typography } from "antd";
 import { FieldInputProps, FieldMetaProps, useField } from "formik";
 import React from "react";
-import { Option } from "../utils/types"
+import { FB_Field_Select_Option } from "../utils/types"
 
-const option: Option = {
+const option: FB_Field_Select_Option = {
   title: "",
 
   value: "",
@@ -12,10 +12,10 @@ const option: Option = {
 type SelectInputProps = {
   [x: string]: any;
   name: string;
-  label: string;
-  options: Option[];
-  field: FieldInputProps<any>;
-  meta: FieldMetaProps<any>;
+  label?: string;
+  options: FB_Field_Select_Option[];
+  // field: FieldInputProps<any>;
+  // meta: FieldMetaProps<any>;
 };
 
 
