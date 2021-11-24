@@ -114,6 +114,8 @@ const FormikBuilder = (props: FormikBuilderProps) => {
         case "text":
           prop = Yup.string().max(15, "Must be 15 characters or less");
           break;
+        // case "upload":
+        //   prop = Yup.object().shape()
       }
       // if (x.required) prop = prop.required(errorMessageRequired);
       obj[x.name] = prop;

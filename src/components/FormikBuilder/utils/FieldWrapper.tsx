@@ -84,6 +84,8 @@ const FieldWrapper = (props: {
         return <CheckboxInput {...additionalProps} {...fieldParams} />;
       case "date":
         return <DateInput {...additionalProps} {...fieldParams} />;
+      // case "upload":
+      //   return <UploadInput {...additionalProps} {...fieldParams} />
       default:
         return <></>;
     }
