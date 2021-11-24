@@ -69,7 +69,7 @@ interface Field_Any {
 
 // FIELD PROPERTIES FOR TYPES 'TEXT', 'NUMBER', 'EMAIL', 'PASSWORD' AND 'PHONE'
 interface Field_GroupOne extends Field_Any {
-  type: "text" | "number" | "email" | "password" | "phone" | "textarea" | "checkbox";
+  type: "text" | "number" | "email" | "password" | "phone" | "textarea" | "checkbox" | "upload";
 }
 
 // FIELD PROPERTIES FOR TYPE 'CHECKBOX'

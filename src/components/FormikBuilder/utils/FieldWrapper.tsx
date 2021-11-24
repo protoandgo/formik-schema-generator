@@ -6,6 +6,7 @@ import {
   CheckboxInput,
   DateInput,
 } from "../components";
+import UploadInput from "../components/UploadInput";
 import {
   Field,
   Field_VisibilityFilter,
@@ -110,6 +111,8 @@ const FieldWrapper = (props: {
         return <CheckboxInput {...additionalProps} {...fieldParams} />;
       case "date":
         return <DateInput {...additionalProps} {...fieldParams} />;
+      case "upload":
+        return <UploadInput {...additionalProps} {...fieldParams} />
       default:
         return <></>;
     }

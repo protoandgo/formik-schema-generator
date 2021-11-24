@@ -39,10 +39,7 @@ type FormikBuilderProps<T = { [x: string]: any }> = {
 const FormikBuilder = (props: FormikBuilderProps) => {
   // =========================== Build Initial Values by Field =========================== //
 
-  const BuildInitValues = (
-    fields: Field[],
-    initialValues: {} | undefined
-  ): {} => {
+  const BuildInitValues = (fields: Field[],initialValues: {} | undefined): {} => {
     let obj: { [x: string]: string | number | boolean } = {};
     fields.forEach((x) => {
       switch (x.type) {
@@ -141,7 +138,7 @@ const FormikBuilder = (props: FormikBuilderProps) => {
         | FormikTouched<any>[]
         | undefined
       )[] = [];
-      if (values && touched) {
+      if (values && touched){
         console.log("Worked");
         fieldParams.visibility?.forEach((filter) => {
           if (filter.hasOwnProperty("field"))
@@ -186,6 +183,8 @@ const FormikBuilder = (props: FormikBuilderProps) => {
         case "text":
           prop = Yup.string().max(15, "Must be 15 characters or less");
           break;
+        // case "upload":
+        //   prop = Yup.object().shape()
       }
       if (x.required) prop = prop.required(errorMessageRequired);
       obj[x.name] = prop;

@@ -77,7 +77,7 @@ const App = () => {
           initialValues={exampleData}
           onSubmit={(values) => console.log(values)}
         />
-        {
+        
       </Card>
     </React.Fragment>
   );
