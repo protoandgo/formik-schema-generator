@@ -71,7 +71,7 @@ const UploadInput = (props: UploadInputProps) => {
           //accept= '.step, .stp, .sldprt, .ipt, .prt, .sat, .catpart, .x_t, .x_b, .pdf, .3dm'
           //value={Blob || null}
           //handleUpload={handleUpload(uploadedFile)}
-          onChange={formik.handleChange}
+          // onChange={formik.handleChange}
         >
           <p className="ant-upload-drag-icon">
             <InboxOutlined />

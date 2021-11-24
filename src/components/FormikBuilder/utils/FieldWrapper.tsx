@@ -9,47 +9,6 @@ import {
 import { conslog } from "./testUtil";
 import { FieldSchema } from "./types";
 
-
-// const FilterPasses = (filter: FB_Field_VisibilityFilter, deps: any) => {
-//   if (filter.hasOwnProperty("field")) {
-//     if (filter.hasOwnProperty("otherField")) {
-//       const xAs = filter as FB_Field_VisibilityFilter_FieldComparisonOtherField;
-//       switch (xAs.is) {
-//         case "less than":
-//           return deps[xAs.field] < deps[xAs.otherField];
-//         case "equal":
-//           return deps[xAs.field] === deps[xAs.otherField];
-//         case "more than":
-//           return deps[xAs.field] > deps[xAs.otherField];
-//       }
-//     } else if (filter.hasOwnProperty("value")) {
-//       const xAs = filter as FB_Field_VisibilityFilter_FieldComparisonValue;
-//       switch (xAs.is) {
-//         case "less than":
-//           return deps[xAs.field] < xAs.value;
-//         case "equal":
-//           return deps[xAs.field] === xAs.value;
-//         case "more than":
-//           return deps[xAs.field] > xAs.value;
-//       }
-//     } else {
-//       const xAs = filter as FB_Field_VisibilityFilter_FieldEmpty;
-//       console.log(xAs);
-//       switch (xAs.is) {
-//         case "empty":
-//           console.log(xAs.field + " is empty?");
-//           return deps[xAs.field] === "";
-//         case "not empty":
-//           console.log(
-//             xAs.field + " is not empty? " + (deps[xAs.field] !== "")
-//           );
-//           return deps[xAs.field] !== "";
-//       }
-//     }
-//   }
-//   return false;
-// };
-
 const FieldWrapper = (props: {
   fieldParams: FieldSchema;
   // field: FieldInputProps<any>;
@@ -57,15 +16,15 @@ const FieldWrapper = (props: {
   formikContext: FormikContextType<typeof fieldParams>;
   
 }) => {
-  const { fieldParams } = props;
+  const { fieldParams, formikContext } = props;
 
   // Component is part of a Formik form
   // const [field, meta] = useField({ name: fieldParams.name });
 
   // Component by type will need to know that it is in a Formik form
   const additionalProps = {
-    field: props.field,
-    meta: props.meta,
+    field: formikContext.getFieldProps(fieldParams.name),
+    meta: formikContext.getFieldMeta(fieldParams.name),
   };
 
   // conslog("PROPS", props);
