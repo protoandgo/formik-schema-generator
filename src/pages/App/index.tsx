@@ -3,32 +3,12 @@ import { Card } from "antd";
 
 // IMPORT: React:
 import React from "react";
+
 // IMPORT: Formik Builder:
 import FormikBuilder from "../../components/FormikBuilder";
 import { FormSchema } from "../../components/FormikBuilder/utils/types";
 
 // Write Form Schema:
-const formSchema: FormSchema = {
-  fields: [
-    {
-      name: "firstName",
-      label: "First Name: ",
-      type: "text",
-      max: 20,
-      required: true,
-    },
-    {
-      name: "age",
-      label: "First Name: ",
-      type: "number",
-      min: 18,
-      max: 100,
-      required: true,
-      visible: "firstName !== ''",
-    },
-  ],
-};
-
 const exampleSchema: FormSchema = {
   fields: [
     {
@@ -42,13 +22,7 @@ const exampleSchema: FormSchema = {
       label: "Second Name: ",
       type: "text",
       required: false,
-      visible: "firstName !== ''",
-      // visibleWhen: [
-      //   {
-      //     field: "firstName",
-      //     is: "not empty",
-      //   },
-      // ],
+      visible: "values.firstName !== ''",
     },
     {
       name: "dayy",
@@ -64,16 +38,6 @@ const exampleSchema: FormSchema = {
       name: "selecttt",
       label: "SELECIONA: ",
       type: "select",
-      // options: [
-      //   {
-      //     title: "EEE",
-      //     value: "eee",
-      //   },
-      //   {
-      //     title: "OOO",
-      //     value: "ooo",
-      //   },
-      // ],
       options: {
         option1: "OPTION NUMBER 1",
         option2: "OPTION NUMBER two",
@@ -93,15 +57,21 @@ const exampleData = {
   firstName: "Lamarr",
 };
 
+// Functional Component:
 const App = () => {
   return (
     <React.Fragment>
       <Card>
         <h1>FORMULARIO</h1>
-        <FormikBuilder formSchema={exampleSchema} initialValues={exampleData} onSubmit={(values) => console.log(values)} />
+        <FormikBuilder
+          formSchema={exampleSchema}
+          initialValues={exampleData}
+          onSubmit={(values) => console.log(values)}
+        />
       </Card>
     </React.Fragment>
   );
 };
 
+// Export:
 export default App;

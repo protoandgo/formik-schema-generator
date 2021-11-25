@@ -1,17 +1,13 @@
 // Formik:
-import { Form, Formik, FormikProps, useFormikContext } from "formik";
-
-// Yup:
-// import * as Yup from "yup";
-// import { BooleanSchema, DateSchema, NumberSchema, StringSchema } from "yup";
+import { Form, Formik, FormikProps } from "formik";
 
 // FormikBuilder:
-import { FieldSchema, FormSchema } from "./utils/types";
+import { FormSchema } from "./utils/types";
 
 // Other:
-import moment from "moment";
 import createYupSchema from "./utils/YupSchemaBuilder";
 import FieldWrapper from "./utils/FieldWrapper";
+import { Button } from "antd";
 
 // Functional Component Props
 type FormikBuilderProps = {
@@ -37,15 +33,15 @@ const FormikBuilder = (props: FormikBuilderProps) => {
         case "checkbox":
           initialValuesEmpty[field.name] = false;
           break;
-        case "date":
-          initialValuesEmpty[field.name] = moment().toISOString();
-          break;
+        // case "date":
+        //   initialValuesEmpty[field.name] = moment().toISOString();
+        //   break;
         case "select":
           initialValuesEmpty[field.name] = field.options[0];
           break;
       }
   });
-  Object.assign(initialValues, initialValuesEmpty);
+  Object.assign(initialValuesEmpty, initialValues);
 
   // Map through each field to build a Yup validation schema
   const validationSchema = createYupSchema(formSchema.fields);
@@ -66,9 +62,11 @@ const FormikBuilder = (props: FormikBuilderProps) => {
         <Form>
           {formSchema.fields.map((fieldParams) => (
             <FieldWrapper
+              key={fieldParams.name}
               formikContext={props}
               fieldParams={fieldParams} />
           ))}
+          <Button htmlType='submit'>Submit</Button>
         </Form>
       )}
     </Formik>

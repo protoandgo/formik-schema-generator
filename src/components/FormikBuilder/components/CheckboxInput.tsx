@@ -1,9 +1,12 @@
-import { Checkbox, Typography } from "antd";
+import { Checkbox } from "antd";
+import { FieldMetaProps } from "formik";
+import RedErrorBelow from "./RedErrorBelow";
 
 export type CheckboxProps = {
   [x: string]: any;
   name: string;
   label?: string;
+  meta: FieldMetaProps<any>;
 }
 const CheckboxInput = (props: CheckboxProps) => {
   const { field, meta } = props;
@@ -12,9 +15,7 @@ const CheckboxInput = (props: CheckboxProps) => {
   return (
     <>
         <Checkbox {...field} checked={field} type="checkbox" >{label}</Checkbox>
-      {meta.touched && meta.error
-        ? <Typography style={{ color: 'darkred' }}>{meta.error}</Typography>
-        : null}
+        <RedErrorBelow meta={meta} />
       <br />
     </>
   );
