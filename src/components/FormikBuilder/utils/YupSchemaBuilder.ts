@@ -1,14 +1,16 @@
 import * as Yup from "yup";
 import { FieldSchema } from "./types";
 import defaultErrorMessages from "./defaultErrorMessages";
+import { ObjectShape } from "yup/lib/object";
 
 // https://stackoverflow.com/questions/57928271/create-yup-nested-object-schema-dynamically
 
+type YupSchema = Yup.ArraySchema<Yup.ObjectSchema<ObjectShape>> | Yup.StringSchema | Yup.NumberSchema | Yup.BooleanSchema | Yup.DateSchema;
+
 const createYupSchema = (fields: FieldSchema[]) => {
-  type YupSchema = Yup.StringSchema | Yup.NumberSchema | Yup.BooleanSchema | Yup.DateSchema;
 
   // Map through each field to build a Yup validation schema
-  const schema = fields.reduce((schema, field) => {
+  const schema: any = fields.reduce((schema, field) => { // <-------------------- ANY
     let yupSchemaPart: YupSchema = Yup.string();
 
     // ============ Type?
@@ -40,7 +42,14 @@ const createYupSchema = (fields: FieldSchema[]) => {
           yupSchemaPart = Yup.boolean(); // BOOLEAN
           break;
         case "date":
+          // TODO https://newbedev.com/how-do-i-validate-if-a-start-date-is-after-an-end-date-with-yup
           yupSchemaPart = Yup.date(); // DATE
+          break;
+        case "box":
+          // let obj: {[x:string]:any} = {}
+          // const obj = ; //field.fields.reduce( (obj, field) => { return field } );
+          // yupSchemaPart = Yup.array().of( Yup.object().shape(createYupSchema(field.fields)));
+          yupSchemaPart = Yup.array().of(createYupSchema(field.fields));
           break;
       }
     }

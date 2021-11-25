@@ -7,7 +7,7 @@ type RedErrorBelowProps = {
 }
 const RedErrorBelow = (props: RedErrorBelowProps) => {
   const { meta } = props;
-  return meta.touched && meta.error ? <Typography.Text type="danger">{meta.error}</Typography.Text> : <React.Fragment></React.Fragment>;
+  return <Typography.Text type="danger">{meta.touched && meta.error ? meta.error : ""}</Typography.Text>;
 };
 
 export default RedErrorBelow;

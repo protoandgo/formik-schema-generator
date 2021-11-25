@@ -1,29 +1,16 @@
-import { Input, Typography} from "antd";
-import { useField } from "formik";
+import { Input } from "antd";
 import React from "react";
+import { GenericInputComponentProps } from "../utils/types";
+import RedErrorBelow from "./RedErrorBelow";
 
-type TextInputProps = {
-  [x: string]: any;
-  name: string;
-  // onBlur: (() => void);
-}
-const TextInput = (props: TextInputProps) => {
-  // const [field, meta] = useField(props);
+const TextInput = (props: GenericInputComponentProps) => {
   const { field, meta } = props;
-  // console.log(props.name + " visible? " + props.visible);
-  // if (onBlur) props.onBlur();
-  const { id, name, label } = props;
+  const { name, label } = props;
   return (
     <React.Fragment>
-      <label htmlFor={id || name}>{label}</label>
-      <Input {...field}
-      // onBlur={e => {
-      //   field.onBlur(e);
-      //   if (onBlur) onBlur();
-      // }}
-      />
-      {meta.touched && meta.error ? <div>{meta.error}</div> : null}
-      <br />
+      <label htmlFor={name}>{label}</label>
+      <Input {...field} />
+      <RedErrorBelow meta={meta} />
     </React.Fragment>
   );
 };

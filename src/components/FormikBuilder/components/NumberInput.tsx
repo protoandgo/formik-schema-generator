@@ -1,5 +1,6 @@
 import { InputNumber, Typography } from 'antd';
 import { useField } from 'formik';
+import RedErrorBelow from './RedErrorBelow';
 
 type NumberInputProps = {
     [x: string]: any;
@@ -16,11 +17,9 @@ const NumberInput = (props: NumberInputProps) => {
           <Typography>{label}</Typography>
         </label>
         <InputNumber {...field} {...props}>0</InputNumber>
-        {meta.touched && meta.error ? (
-          <Typography style={{ color: "darkred" }}>{meta.error}</Typography>
-        ) : null}
-        <br />
+        <RedErrorBelow meta={meta} />
       </>
     );
 }
 
+export default NumberInput;

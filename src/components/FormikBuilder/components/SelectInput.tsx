@@ -1,20 +1,16 @@
 import { Select, Typography } from "antd";
-import { FieldInputProps, FieldMetaProps } from "formik";
 import React from "react";
+import { GenericInputComponentProps } from "../utils/types";
+import RedErrorBelow from "./RedErrorBelow";
 
-type SelectInputProps = {
-  [x: string]: any;
-  name: string;
-  label?: string;
+interface SelectInputProps extends GenericInputComponentProps {
   options: { [value: string]: string };
-  field: FieldInputProps<any>;
-  meta: FieldMetaProps<any>;
 };
 
 const SelectInput = (props: SelectInputProps) => {
   // const [field, meta, label] = useField(props);
   const { field, meta } = props;
-  const { id, name, label, options } = props;
+  const { name, label, options } = props;
 
   const ShowOptions = (options: { [value: string]: string }) => {
     const list = [];
@@ -30,14 +26,13 @@ const SelectInput = (props: SelectInputProps) => {
 
   return (
     <React.Fragment>
-      <label htmlFor={id || name}>
+      <label htmlFor={name}>
         <Typography>{label}</Typography>
       </label>
       <Select style={{ width: "100%" }} {...field}>
         {ShowOptions(options)}
       </Select>
-      {meta.touched && meta.error ? <Typography style={{ color: "darkred" }}>{meta.error}</Typography> : null}
-      <br />
+      <RedErrorBelow meta={meta} />
     </React.Fragment>
   );
 };

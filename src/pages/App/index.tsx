@@ -1,5 +1,5 @@
 // IMPORT: Ant Design:
-import { Card } from "antd";
+import { Card, Row } from "antd";
 
 // IMPORT: React:
 import React from "react";
@@ -12,17 +12,24 @@ import { FormSchema } from "../../components/FormikBuilder/utils/types";
 const exampleSchema: FormSchema = {
   fields: [
     {
-      name: "firstName",
-      label: "First Name: ",
-      type: "text",
-      required: true,
-    },
-    {
-      name: "secondName",
-      label: "Second Name: ",
-      type: "text",
-      required: false,
-      visible: "values.firstName !== ''",
+      name: "user",
+      label: "USUARIO",
+      type: "box",
+      fields: [
+        {
+          name: "firstName",
+          label: "First Name: ",
+          type: "text",
+          // required: true,
+        },
+        {
+          name: "secondName",
+          label: "Second Name: ",
+          type: "text",
+          required: true,
+          visible: "values.firstName !== ''",
+        },
+      ],
     },
     {
       name: "dayy",
@@ -61,14 +68,16 @@ const exampleData = {
 const App = () => {
   return (
     <React.Fragment>
-      <Card>
-        <h1>FORMULARIO</h1>
-        <FormikBuilder
-          formSchema={exampleSchema}
-          initialValues={exampleData}
-          onSubmit={(values) => console.log(values)}
-        />
-      </Card>
+      <Row justify="center" align="middle" style={{ height: "100vh", width: "100vw" }}>
+        <Card style={{ margin: "30px", marginBottom: "120px", width: "500px" }}>
+          <FormikBuilder
+            title={"FORMULARIO"}
+            formSchema={exampleSchema}
+            initialValues={exampleData}
+            onSubmit={(values) => console.log(values)}
+          />
+        </Card>
+      </Row>
     </React.Fragment>
   );
 };

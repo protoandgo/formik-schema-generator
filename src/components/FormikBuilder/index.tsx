@@ -6,11 +6,13 @@ import { FormSchema } from "./utils/types";
 
 // Other:
 import createYupSchema from "./utils/YupSchemaBuilder";
-import FieldWrapper from "./utils/FieldWrapper";
-import { Button } from "antd";
+import FieldWrapper from "./components/FieldWrapper";
+import { Button, Space, Typography } from "antd";
+import React from "react";
 
 // Functional Component Props
 type FormikBuilderProps = {
+  title?: string;
   formSchema: FormSchema;
   initialValues?: {};
   onSubmit: (values: any) => void;
@@ -19,7 +21,7 @@ type FormikBuilderProps = {
 // Functional Component
 const FormikBuilder = (props: FormikBuilderProps) => {
   // Destructuring Props
-  const { formSchema, initialValues, onSubmit } = props;
+  const { title, formSchema, initialValues, onSubmit } = props;
 
   // Map through each field to give default values to the initialValues that are undefined
   const initialValuesEmpty: any = {};
@@ -48,28 +50,28 @@ const FormikBuilder = (props: FormikBuilderProps) => {
 
   // Handle Submit
   const handleSubmit = (values: any) => {
-    // TODO something?
+    // Mark all fields as 'touched' before submit so that all errors are shown
+
+    // Call the given onSubmit function
     onSubmit(values);
   };
 
   return (
-    <Formik
-      initialValues={initialValues || {}}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-      >
-      {(props: FormikProps<any>) => (
-        <Form>
-          {formSchema.fields.map((fieldParams) => (
-            <FieldWrapper
-              key={fieldParams.name}
-              formikContext={props}
-              fieldParams={fieldParams} />
-          ))}
-          <Button htmlType='submit'>Submit</Button>
-        </Form>
-      )}
-    </Formik>
+    <React.Fragment>
+      {title && <Typography.Title>{title}</Typography.Title>}
+      <Formik initialValues={initialValues || {}} validationSchema={validationSchema} onSubmit={handleSubmit}>
+        {(props: FormikProps<any>) => (
+          <Form>
+            <Space direction="vertical" size={15} style={{ width: "100%" }}>
+              {formSchema.fields.map((fieldParams) => (
+                <FieldWrapper key={fieldParams.name} formikContext={props} fieldParams={fieldParams} />
+              ))}
+              <Button htmlType="submit">Submit</Button>
+            </Space>
+          </Form>
+        )}
+      </Formik>
+    </React.Fragment>
   );
 };
 
