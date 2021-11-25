@@ -1,6 +1,8 @@
 import { DatePicker } from "antd";
-import { useField, useFormikContext } from "formik";
+import { useFormikContext } from "formik";
 import moment from "moment";
+import React from "react";
+import RedErrorBelow from "./RedErrorBelow";
 
 type DateInputProps = {
     [x: string]: any;
@@ -9,18 +11,20 @@ type DateInputProps = {
 
 
 const DateInput = (props: DateInputProps) => {
-    const [field, meta] = useField({ ...props, type: 'date' })
+    // const [field/*, meta*/] = useField({ ...props, type: 'date' })
+    const { field, meta } = props;
     const { setFieldValue } = useFormikContext();
 
-    return (
+    return (<React.Fragment>
       <DatePicker
         {...field}
-        {...props}
+        // {...props}
         value={(field.value && moment(field.value)) || null}
         onChange={(val) => {
           setFieldValue(field.name, val);
         }}
       />
+      <RedErrorBelow meta={meta} /></React.Fragment>
     );
 }
 

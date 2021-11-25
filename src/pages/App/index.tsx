@@ -1,34 +1,28 @@
-// https://codesandbox.io/s/github/tchaumeny/formik-schema/tree/master/demo?file=/src/forms.jsx:1798-1804
-// https://github.com/tchaumeny/formik-schema
-
+// IMPORT: Ant Design:
 import { Card } from "antd";
+
+// IMPORT: React:
 import React from "react";
+
+// IMPORT: Formik Builder:
 import FormikBuilder from "../../components/FormikBuilder";
 import { FormSchema } from "../../components/FormikBuilder/utils/types";
-import TestForm from "../../TestPage/TestForm";
-import UploadInput from "../../components/FormikBuilder/components/UploadInput";
 
-
-// Form Schemas will be stored in a separate file
+// Write Form Schema:
 const exampleSchema: FormSchema = {
   fields: [
     {
       name: "firstName",
       label: "First Name: ",
       type: "text",
-      // required: true,
+      required: true,
     },
     {
       name: "secondName",
       label: "Second Name: ",
       type: "text",
-      // required: false,
-      visibleWhen: [
-        {
-          field: "firstName",
-          is: "not empty",
-        },
-      ],
+      required: false,
+      visible: "values.firstName !== ''",
     },
     {
       name: "dayy",
@@ -36,19 +30,19 @@ const exampleSchema: FormSchema = {
       type: "date",
     },
     {
+      name: "pass",
+      type: "passwordconfirm",
+      passwordFieldName: "password",
+    },
+    {
       name: "selecttt",
       label: "SELECIONA: ",
       type: "select",
-      options: [
-        {
-          title: "EEE",
-          value: "eee",
-        },
-        {
-          title: "OOO",
-          value: "ooo",
-        },
-      ],
+      options: {
+        option1: "OPTION NUMBER 1",
+        option2: "OPTION NUMBER two",
+        option3: "THIRD OPTION!!!",
+      },
     },
     {
       name: "checkboxxxx",
@@ -63,17 +57,14 @@ const exampleData = {
   firstName: "Lamarr",
 };
 
-// TODO intl ?
-const errorMessageRequired = "Required";
-
+// Functional Component:
 const App = () => {
   return (
     <React.Fragment>
       <Card>
         <h1>FORMULARIO</h1>
         <FormikBuilder
-          schema={exampleSchema}
-          errorMessageRequired={errorMessageRequired}
+          formSchema={exampleSchema}
           initialValues={exampleData}
           onSubmit={(values) => console.log(values)}
         />
@@ -82,4 +73,5 @@ const App = () => {
   );
 };
 
+// Export:
 export default App;

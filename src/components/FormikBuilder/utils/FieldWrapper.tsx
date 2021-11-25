@@ -1,98 +1,69 @@
-import { FieldInputProps, FieldMetaProps, useField, useFormikContext } from "formik";
-import { useState } from "react";
-import {
-  TextInput,
-  SelectInput,
-  CheckboxInput,
-  DateInput,
-} from "../components";
-import { conslog } from "./testUtil";
-import {
-  FB_Field,
-} from "./types";
+/* eslint-disable no-new-func */
+import { Field, FieldAttributes, FormikContextType, FormikValues } from "formik";
+import React from "react";
+import { TextInput, SelectInput, CheckboxInput, DateInput } from "../components";
+import { FieldSchema } from "./types";
 
-
-// const FilterPasses = (filter: FB_Field_VisibilityFilter, deps: any) => {
-//   if (filter.hasOwnProperty("field")) {
-//     if (filter.hasOwnProperty("otherField")) {
-//       const xAs = filter as FB_Field_VisibilityFilter_FieldComparisonOtherField;
-//       switch (xAs.is) {
-//         case "less than":
-//           return deps[xAs.field] < deps[xAs.otherField];
-//         case "equal":
-//           return deps[xAs.field] === deps[xAs.otherField];
-//         case "more than":
-//           return deps[xAs.field] > deps[xAs.otherField];
-//       }
-//     } else if (filter.hasOwnProperty("value")) {
-//       const xAs = filter as FB_Field_VisibilityFilter_FieldComparisonValue;
-//       switch (xAs.is) {
-//         case "less than":
-//           return deps[xAs.field] < xAs.value;
-//         case "equal":
-//           return deps[xAs.field] === xAs.value;
-//         case "more than":
-//           return deps[xAs.field] > xAs.value;
-//       }
-//     } else {
-//       const xAs = filter as FB_Field_VisibilityFilter_FieldEmpty;
-//       console.log(xAs);
-//       switch (xAs.is) {
-//         case "empty":
-//           console.log(xAs.field + " is empty?");
-//           return deps[xAs.field] === "";
-//         case "not empty":
-//           console.log(
-//             xAs.field + " is not empty? " + (deps[xAs.field] !== "")
-//           );
-//           return deps[xAs.field] !== "";
-//       }
-//     }
-//   }
-//   return false;
-// };
+const CreateCondition = (writtenCondition: string | undefined): Function => {
+  if (!writtenCondition) return new Function('return true;');
+  else {
+    return new Function('values', `return ${writtenCondition};`);
+  }
+};
 
 const FieldWrapper = (props: {
-  fieldParams: FB_Field;
-  field: FieldInputProps<any>;
-  meta: FieldMetaProps<any>;
-  
+  fieldParams: FieldSchema;
+  // field: FieldInputProps<any>;
+  // meta: FieldMetaProps<any>;
+  formikContext: FormikContextType<FormikValues>;
 }) => {
-  const { fieldParams } = props;
+  const { fieldParams, formikContext } = props;
 
   // Component is part of a Formik form
   // const [field, meta] = useField({ name: fieldParams.name });
 
   // Component by type will need to know that it is in a Formik form
-  const additionalProps = {
-    field: props.field,
-    meta: props.meta,
-  };
+  // const additionalProps = {
+  //   field: formikContext.getFieldProps(fieldParams.name),
+  //   meta: formikContext.getFieldMeta(fieldParams.name),
+  // };
 
   // conslog("PROPS", props);
 
   // Get Component by type
-  const componentByType = () => {
+  const componentByType = (props: FieldAttributes<any>) => {
     switch (fieldParams.type) {
       case "text":
-        return <TextInput {...additionalProps} {...fieldParams} />;
+        return <TextInput {...props} {...fieldParams} />;
       // case "textArea":
       //   return <TextAreaInput key={x.name} {...fieldParams} />;
       case "select":
-        return <SelectInput {...additionalProps} {...fieldParams} />;
+        return <SelectInput {...props} {...fieldParams} />;
       case "checkbox":
-        return <CheckboxInput {...additionalProps} {...fieldParams} />;
+        return <CheckboxInput {...props} {...fieldParams} />;
       case "date":
-        return <DateInput {...additionalProps} {...fieldParams} />;
+        return <DateInput {...props} {...fieldParams} />;
       // case "upload":
-      //   return <UploadInput {...additionalProps} {...fieldParams} />
+      //   return <UploadInput {...props} {...fieldParams} />
       default:
-        return <></>;
+        return <React.Fragment></React.Fragment>;
     }
   };
 
+  const VisibleCondition: Function = CreateCondition(fieldParams.visible);
+
   // Return the Component by type with key and visibility
-  return componentByType();
+  return (
+    <Field name={fieldParams.name}>
+      {(props: FieldAttributes<any>) => {
+        if (VisibleCondition(formikContext.values)) {
+          return componentByType(props);
+        } else {
+          return <React.Fragment></React.Fragment>
+        }
+      }}
+    </Field>
+  );
 };
 
 export default FieldWrapper;
