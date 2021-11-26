@@ -91,7 +91,7 @@ const AddInput = () => {
         if (editInputIndex === index) {
           // MUESTRA EL INPUT
           return (
-            <Input.Number
+            <Input
               ref={editInputRef}
               key={tag}
               size="small"
@@ -134,7 +134,7 @@ const AddInput = () => {
       {/* INSERTAR NUEVO TAG: UN Tag Y UN Input */}
       {/* SI ESTAS INSERTANDO UN NUEVO TAG, MOSTRAR EL INPUT */}
       {inputVisible && (
-        <Input.Number
+        <Input
           ref={inputRef}
           type="text"
           size="small"
