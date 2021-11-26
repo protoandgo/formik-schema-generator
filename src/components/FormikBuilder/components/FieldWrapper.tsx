@@ -62,11 +62,11 @@ const FieldWrapper = (props: { fieldParams: FieldSchema; formikContext: FormikCo
   // }
   // ---------------------------------------------
   return VisibleCondition(formikContext.values) ? (
-    fieldParams.type === "box" ? (
-      <FieldArray name={fieldParams.name}>{({ push, remove }) => <BoxArray {...props} {...fieldParams} />}</FieldArray>
-    ) : (
+    // fieldParams.type === "box" ? (
+    //   <FieldArray name={fieldParams.name}>{({ push, remove }) => <BoxArray {...props} {...fieldParams} />}</FieldArray>
+    // ) : (
       <Field name={fieldParams.name}>{(props: FieldAttributes<any>) => componentByType(props, fieldParams)}</Field>
-    )
+    // )
   ) : (
     <React.Fragment></React.Fragment>
   );

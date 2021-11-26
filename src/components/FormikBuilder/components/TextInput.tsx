@@ -10,7 +10,8 @@ const TextInput = (props: GenericInputComponentProps) => {
     <React.Fragment>
       <label htmlFor={name}>{label}</label>
       <Input {...field} />
-      <RedErrorBelow meta={meta} />
+      {!field && <span>NO FIELD</span>}
+      {meta ? <RedErrorBelow meta={meta} /> : <span>NO META</span>}
     </React.Fragment>
   );
 };

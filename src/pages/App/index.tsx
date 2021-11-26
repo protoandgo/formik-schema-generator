@@ -7,6 +7,7 @@ import React from "react";
 // IMPORT: Formik Builder:
 import FormikBuilder from "../../components/FormikBuilder";
 import { FormSchema } from "../../components/FormikBuilder/utils/types";
+import TestPage from "../TestPage";
 
 // Write Form Schema:
 const exampleSchema: FormSchema = {
@@ -67,18 +68,20 @@ const exampleData = {
 // Functional Component:
 const App = () => {
   return (
-    <React.Fragment>
-      <Row justify="center" align="middle" style={{ height: "100vh", width: "100vw" }}>
-        <Card style={{ margin: "30px", marginBottom: "120px", width: "500px" }}>
-          <FormikBuilder
-            title={"FORMULARIO"}
-            formSchema={exampleSchema}
-            initialValues={exampleData}
-            onSubmit={(values) => console.log(values)}
-          />
-        </Card>
-      </Row>
-    </React.Fragment>
+    // <React.Fragment>
+    //   <Row justify="center" align="middle" style={{ height: "100vh", width: "100vw" }}>
+    //     <Card style={{ margin: "30px", marginBottom: "120px", width: "500px" }}>
+    //       <FormikBuilder
+    //         title={"FORMULARIO"}
+    //         formSchema={exampleSchema}
+    //         initialValues={exampleData}
+    //         onSubmit={(values) => console.log(values)}
+    //       />
+    //     </Card>
+    //   </Row>
+    // </React.Fragment>
+    // eslint-disable-next-line react/jsx-no-undef
+    <TestPage/>
   );
 };
 

@@ -1,6 +1,6 @@
 import PlusCircleOutlined from "@ant-design/icons/lib/icons/PlusCircleOutlined";
 import { Button, Card, message, Space, Typography } from "antd";
-import { FieldAttributes } from "formik";
+import { FieldAttributes, getIn, useFormikContext } from "formik";
 import { Field } from "rc-field-form";
 import React from "react";
 import { FieldSchema, GenericInputComponentProps } from "../utils/types";
@@ -15,6 +15,7 @@ interface BoxArrayProps extends GenericInputComponentProps {
 const BoxArray = (props: BoxArrayProps) => {
   const { field, meta } = props;
   const { label, fields } = props;
+  const formik = useFormikContext();
 
   const handleAdd = () => {
     message.info("Add new element");
@@ -25,9 +26,12 @@ const BoxArray = (props: BoxArrayProps) => {
       <Card>
         {label && <Typography.Title level={3}>{label}</Typography.Title>}
         <Space direction="vertical" size={15} style={{ width: "100%" }}>
-          {fields.map((fieldParams) => (
-            <Field name={fieldParams.name}>{(props: FieldAttributes<any>) => componentByType(props, fieldParams)}</Field>
-          ))}
+          {fields.map((fieldParams, index) => {
+            const subField = { name: fieldParams.name };
+            
+            // const subField = getIn(formik., ``);
+            return <Field {...field} name={fieldParams.name}>{(props: FieldAttributes<any>) => componentByType(props, fieldParams)}</Field>
+          })}
           <Button onClick={handleAdd}>
             <PlusCircleOutlined />
           </Button>
