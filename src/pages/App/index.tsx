@@ -6,6 +6,7 @@ import React from "react";
 
 // IMPORT: Formik Builder:
 import FormikBuilder from "../../components/FormikBuilder";
+import AddInput from "../../components/FormikBuilder/components/AddInput";
 import { FormSchema } from "../../components/FormikBuilder/utils/types";
 import TestPage from "../TestPage";
 import TestPage2 from "../TestPage2";
@@ -79,6 +80,7 @@ const App = () => {
             onSubmit={(values) => console.log(values)}
           />
         </Card>
+        <AddInput/>
       </Row>
     </React.Fragment>
     // eslint-disable-next-line react/jsx-no-undef
