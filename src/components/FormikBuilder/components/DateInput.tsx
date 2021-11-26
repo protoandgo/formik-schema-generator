@@ -2,20 +2,15 @@ import { DatePicker } from "antd";
 import { useFormikContext } from "formik";
 import moment from "moment";
 import React from "react";
+import { GenericInputComponentProps } from "../utils/types";
 import RedErrorBelow from "./RedErrorBelow";
 
-type DateInputProps = {
-    [x: string]: any;
-    name: string;
-}
+const DateInput = (props: GenericInputComponentProps) => {
+  const { field, meta } = props;
+  const { setFieldValue } = useFormikContext();
 
-
-const DateInput = (props: DateInputProps) => {
-    // const [field/*, meta*/] = useField({ ...props, type: 'date' })
-    const { field, meta } = props;
-    const { setFieldValue } = useFormikContext();
-
-    return (<React.Fragment>
+  return (
+    <React.Fragment>
       <DatePicker
         {...field}
         // {...props}
@@ -24,8 +19,9 @@ const DateInput = (props: DateInputProps) => {
           setFieldValue(field.name, val);
         }}
       />
-      <RedErrorBelow meta={meta} /></React.Fragment>
-    );
-}
+      <RedErrorBelow meta={meta} />
+    </React.Fragment>
+  );
+};
 
-export default DateInput
+export default DateInput;
