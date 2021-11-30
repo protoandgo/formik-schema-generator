@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // IMPORT: Ant Design:
 import { Card, Row } from "antd";
 
@@ -8,8 +9,7 @@ import React from "react";
 import FormikBuilder from "../../components/FormikBuilder";
 import AddInput from "../../components/FormikBuilder/materialUIcomponents/AddInput";
 import { FormSchema } from "../../components/FormikBuilder/utils/types";
-import TestPage from "../TestPage";
-import TestPage2 from "../TestPage2";
+import FormikBuilderExample from "../../components/FormikBuilder2";
 
 // Write Form Schema:
 const exampleSchema: FormSchema = {
@@ -74,19 +74,19 @@ const App = () => {
     <AddInput name={""} />
       <Row justify="center" align="middle" style={{ height: "100vh", width: "100vw" }}>
         <Card style={{ margin: "30px", marginBottom: "120px", width: "500px" }}>
-          <FormikBuilder
+          {/* <FormikBuilder
             title={"FORMULARIO"}
             formSchema={exampleSchema}
             initialValues={exampleData}
             onSubmit={(values) => console.log(values)}
-          />
+          /> */}
+          {/* <TestPage/> */}
+          {/* <TestPage2 /> */}
+          <FormikBuilderExample />
         </Card>
       </Row>
       <AddInput name={"hola"}/>
     </React.Fragment>
-    // eslint-disable-next-line react/jsx-no-undef
-    // <TestPage/>
-    // <TestPage2 />
   );
 };
 

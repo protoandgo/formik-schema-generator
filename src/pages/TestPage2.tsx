@@ -1,14 +1,14 @@
 import { Checkbox, Input, Typography } from "antd";
 import {
+  Form,
+  Field,
   FieldHelperProps,
   FieldInputProps,
   FieldMetaProps,
   Formik,
   FormikProps,
   FormikValues,
-  useField,
 } from "formik";
-import Form from "rc-field-form/es/Form";
 import React from "react";
 
 interface FieldInfo_Any {
@@ -36,14 +36,36 @@ type FBField = {
   field: FieldInputProps<any>;
   meta: FieldMetaProps<any>;
   helpers: FieldHelperProps<any>;
+  setFieldValue: any;
 };
-const InputField = (props: FBField) => {
+
+const TestInput = ({
+  field: { name, onChange, value },
+  setFieldValue,
+  ...props
+}: any) => {
+
+  const customHandle = (e: any) => {
+    console.log(e.target.value);
+    setFieldValue(name, 'ffffff')
+  }
+
   return (
     <React.Fragment>
-      <span>{props.info.name}</span>
-      <Input {...props.field} />
-      <span color="red">{props.meta.error}</span>
+      <span>{name}</span>
+      <Input name={name} type="text" value={value} onChange={customHandle} />
     </React.Fragment>
+  );
+}
+
+
+const InputField = (props: FBField) => {
+  return (
+    <Field
+      {...props}
+      component={TestInput}
+      onChange={null}
+    />
   );
 };
 const CheckboxField = (props: FBField) => {
@@ -68,52 +90,54 @@ const RenderField = (
   // const fieldProps = { info: fieldInfo, field: f, meta: m, helpers: h };
   const fullName = beforeName + fieldInfo.name;
   console.log("Displaying " + fullName);
-  // const fieldProps = {
-  //   info: fieldInfo,
-  //   field: formikProps.getFieldProps(fullName),
-  //   meta: formikProps.getFieldMeta(fullName),
-  //   helpers: formikProps.getFieldHelpers(fullName) };
+  const fieldProps = {
+    info: fieldInfo,
+    field: formikProps.getFieldProps(fullName),
+    meta: formikProps.getFieldMeta(fullName),
+    helpers: formikProps.getFieldHelpers(fullName),
+    setFieldValue: formikProps.setFieldValue,
+  };
 
   switch (fieldInfo.type) {
     case "text":
-      console.log(fullName + " is of type 'text'");
-      field = <span>Type is Text</span>;
-      // field = <InputField {...fieldProps}></InputField>;
+      // console.log(fullName + " is of type 'text'");
+      // field = <span>Type is Text</span>;
+      field = <InputField {...fieldProps}></InputField>;
       break;
 
     case "checkbox":
-      console.log(fullName + " is of type 'checkbox'");
-      field = <span>Type is Checkbox</span>;
-      // field = <CheckboxField {...fieldProps}></CheckboxField>;
+      // console.log(fullName + " is of type 'checkbox'");
+      // field = <span>Type is Checkbox</span>;
+      field = <CheckboxField {...fieldProps}></CheckboxField>;
       break;
 
     case "array":
-      console.log(fullName + " is of type 'array'");
-      field = <span>Type is Array</span>;
-        // // NESTED FIELDS (ARRAY)
-        // field = fieldInfo.fields.map((y, i) =>
-        //   // NESTED FIELD
-        //   RenderField(
-        //     y,
-        //     i,
-        //     formikProps,
-        //     `${fullName}[${i}].`
-        //   )
-        // );
+      // console.log(fullName + " is of type 'array'");
+      // field = <span>Type is Array</span>;
+      // NESTED FIELDS (ARRAY)
+      field = fieldInfo.fields.map((y, i) =>
+        // NESTED FIELD
+        RenderField(
+          y,
+          i,
+          formikProps,
+          `${fullName}[${i}].`
+        )
+      );
       break;
     case "object":
-      console.log(fullName + " is of type 'object'");
-      field = <span>Type is Object</span>;
-        // // NESTED FIELDS (OBJECT)
-        // field = fieldInfo.fields.map((y, i) =>
-        //   // NESTED FIELD
-        //   RenderField(
-        //     y,
-        //     i,
-        //     formikProps,
-        //     `${fullName}.`
-        //   )
-        // );
+      // console.log(fullName + " is of type 'object'");
+      // field = <span>Type is Object</span>;
+      // NESTED FIELDS (OBJECT)
+      field = fieldInfo.fields.map((y, i) =>
+        // NESTED FIELD
+        RenderField(
+          y,
+          i,
+          formikProps,
+          `${fullName}.`
+        )
+      );
       break;
 
     default:
@@ -128,7 +152,7 @@ const RenderField = (
 
 type TestFBProps = {
   schema: FBSchema;
-  initialValues: { [x:string]: any };
+  initialValues: { [x: string]: any };
 }
 const TestFB = (props: TestFBProps) => {
   return (
@@ -140,7 +164,6 @@ const TestFB = (props: TestFBProps) => {
         initialValues={props.initialValues}
         onSubmit={console.log}
         render={(formikProps) => (
-          // FORM
           <Form>
             {/* FIELDS */}
             {/* {Object.entries(props.schema).map((x, i) => */}
@@ -148,6 +171,10 @@ const TestFB = (props: TestFBProps) => {
               // FIELD
               RenderField(x, i, formikProps, "")
             )}
+            
+            <pre style={{ width: 500, minHeight: 300 }}>
+              {JSON.stringify(formikProps.values, null, '  ')}
+            </pre>
           </Form>
         )}
       />
@@ -158,17 +185,17 @@ const TestFB = (props: TestFBProps) => {
 const TestPage2 = () => {
   return (
     <TestFB
+      // ----------------------------------------------
+      schema={{
+        formName: "Formulario", fields: [
+          { name: "userName", type: "text" },
+        ]
+      }}
+    //   initialValues={{ users: [{ userName: "", hobbies: [{ hobby: "" }] }] }}
     // ----------------------------------------------
-      // schema={{ formName: "Formulario", fields: [
-      //   { name: "users", type: "object", fields: [
-      //     { name: "userName", type: "text" },
-      //     { name: "hobbies", type: "array", fields: [
-      //       { name: "hobby", type: "text" }]}] }] }}
-      // initialValues={{ users: [{ userName: "", hobbies: [{ hobby: "" }] }] }}
-      // ----------------------------------------------
-      schema={{ formName: "Formulario", fields: [{ name: "userName", type: "text" }] }}
-      initialValues={{ userName: "" }}
-      // ----------------------------------------------
+    // schema={{ formName: "Formulario", fields: [{ name: "userName", type: "text" }] }}
+    initialValues={{ userName: "" }}
+    // ----------------------------------------------
     />
   );
 };
