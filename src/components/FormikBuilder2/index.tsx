@@ -5,6 +5,7 @@ import { ArrayInput, TextInput, FormTitle, SubmitButton } from "./components/ant
 import { GenerateYupSchema } from "./utils/generateYupSchema";
 import { GenerateInitValues } from "./utils/generateInitValues";
 import "./index.css";
+import { GenerateVisibilityConditions } from "./utils/generateVisibilityConditions";
 
 const inputComponents: { [x: string]: { [x: string]: (props: any) => JSX.Element } } = {
   antd: {
@@ -13,13 +14,22 @@ const inputComponents: { [x: string]: { [x: string]: (props: any) => JSX.Element
   },
 };
 
+// const CreateCondition = (writtenCondition: string | undefined): Function => {
+//   console.log("CreateCondition");
+//   // eslint-disable-next-line no-new-func
+//   return new Function("values", `return ${writtenCondition || "true"};`);
+// };
+
 export const RenderField = (
   formikContext: FormikProps<any>,
+  visibilityConditions: { [x: string]: Function },
   x: schemaField,
   i: number,
   beforeName: string
 ) => {
   const fullName = beforeName + x.name;
+
+  
 
   // console.log(fullName);
   // console.log(formikContext.values[fullName]); //<------------ SYNTHETIC BASE EVENT ???????????
@@ -41,7 +51,12 @@ export const RenderField = (
             const arrayElements = formikContext.values[fullName]
               ? formikContext.values[fullName].map((xx: any, ii: any) =>
                   x.fields.map((xxx, iii) =>
-                    RenderField(formikContext, xxx, iii, `${fullName}[${ii}].`)
+                    {
+                      // const VisibleCondition: Function = CreateCondition(xxx.visible);
+                    
+                      // if (!VisibleCondition(formikContext.values)) return <React.Fragment></React.Fragment>;
+                      // else 
+                      return RenderField(formikContext, visibilityConditions, xxx, iii, `${fullName}[${ii}].`)}
                   )
                 )
               : [];
@@ -78,16 +93,7 @@ const FormikBuilder = ({
   schema: schema;
   initialValues?: any;
 }) => {
-  // emptyValues = {
-  //   string: "",
-  //   number: 0,
-  //   checkbox: false,
-  //   date: moment().toISOString();
-
-  // }
-  // const fixedInitialValues = schema.fields.map(x => {
-
-  // });
+  const visibilityConditions = GenerateVisibilityConditions(schema.fields);
   return (
   <React.Fragment>
     <FormTitle text={schema.title} />
@@ -106,7 +112,7 @@ const FormikBuilder = ({
         <Form>
           {/* {ArrayField(formikContext, x, "", undefined)} */}
           {schema.fields.map((x, i) => {
-            return RenderField(formikContext, x, i, "");
+            return RenderField(formikContext, visibilityConditions, x, i, "");
           })}
           <SubmitButton text={schema.submitButtonText} />
         </Form>
@@ -125,6 +131,7 @@ const FormikBuilderExample = () => {
         label: "Your Name",
         type: "text",
         required: true,
+        min: 4,
       },
       {
         name: "friends",
@@ -148,16 +155,17 @@ const FormikBuilderExample = () => {
   return (
     <FormikBuilder
       schema={schema}
-      // initialValues={
-      //   {
-      //     // friends: [
-      //     //   {
-      //     //     name: "Hola",
-      //     //     email: ""
-      //     //   }
-      //     // ]
-      //   }
-      // }
+      initialValues={
+        {
+          yourname: "ha",
+          // friends: [
+          //   {
+          //     name: "Hola",
+          //     email: ""
+          //   }
+          // ]
+        }
+      }
     />
   );
 };
