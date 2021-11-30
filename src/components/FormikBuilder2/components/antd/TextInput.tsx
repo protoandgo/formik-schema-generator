@@ -8,25 +8,23 @@ export const TextInput = ({
   field: { name, onChange, value },
   meta,
   setFieldValue,
-  ...props }:
-  {
-    field: FieldAttributes<any>;
-    meta: FieldMetaProps<any>;
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
-    fieldInfo: schemaField
-  }) => {
-  const customHandle = (e: { target: { value: any; }; }) => {
+  ...props
+}: {
+  field: FieldAttributes<any>;
+  meta: FieldMetaProps<any>;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  fieldInfo: schemaField;
+}) => {
+  const customHandle = (e: { target: { value: any } }) => {
     // console.log(e.target.value);
     setFieldValue(name, e.target.value);
-  }
+  };
   // console.log(name);
-  return <React.Fragment>
-
-    <label
-      htmlFor={props.fieldInfo.name}>
-      {props.fieldInfo.label}
-    </label>
-    <Input name={name} type="text" value={value} onChange={customHandle} />
-    <RedErrorBelow meta={meta} />
-  </React.Fragment>
-}
+  return (
+    <React.Fragment>
+      <label htmlFor={props.fieldInfo.name}>{props.fieldInfo.label}</label>
+      <Input name={name} type="text" value={value} onChange={customHandle} />
+      <RedErrorBelow meta={meta} />
+    </React.Fragment>
+  );
+};

@@ -4,8 +4,8 @@ import { FieldMetaProps } from "formik";
 import { schemaFieldArray } from "../../utils/types";
 
 export const ArrayInput = (
-  elements: JSX.Element[],
-  onAdd: (obj: any) => void,
+  arrayFields: JSX.Element[],
+  onAdd: () => void,
   onRemove: (index: number) => void,
   x: schemaFieldArray,
 ) => {
@@ -14,7 +14,7 @@ export const ArrayInput = (
       htmlFor={x.name}>
       {x.label}
     </label>
-    {elements.map((xx, ii) =>
+    {arrayFields.map((xx, ii) =>
       <Card type="inner" key={ii}>
         <Space direction="vertical">
           {xx}
