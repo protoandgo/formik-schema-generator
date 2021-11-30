@@ -1,3 +1,7 @@
+import { FieldAttributes, FieldMetaProps } from "formik";
+
+// ============================================================================ SCHEMA TYPES
+
 interface CommonProps {
   name: string;
   label?: string; // title of the field
@@ -61,3 +65,24 @@ export interface schema {
   submitButtonText: string;
   fields: schemaField[];
 }
+
+// ============================================================================ COMPONENT PROPS TYPES
+
+export interface CommonInputProps {
+  field: FieldAttributes<any>;
+  meta: FieldMetaProps<any>;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  fieldInfo: schemaField;
+}
+
+export type ArrayInputProps = {
+  arrayElements: JSX.Element[];
+  onAdd: () => void;
+  remove: (index: number) => void;
+  x: schemaFieldArray;
+};
+export type RedErrorBelowProps = { meta: FieldMetaProps<any> };
+export type FormTitleProps = { text: string };
+export type SubmitButtonProps = { text: string };
+
+// ============================================================================ type for object 'UIComponents' declared at the start of FormikBuilder's index.tsx

@@ -1,42 +1,33 @@
+// React
 import React from "react";
+// Formik
 import { Formik, Field, Form, FieldArray, FormikProps } from "formik";
+// Types
 import { schema, schemaField } from "./utils/types";
-import { ArrayInput, TextInput, FormTitle, SubmitButton } from "./components/antd";
+// Components prepared for different UI Libraries
+import {
+  ArrayInput,
+  FieldComponent,
+  FormTitle,
+  possibleUis,
+  SubmitButton,
+} from "./components";
+// Generators
 import { GenerateYupSchema } from "./utils/generateYupSchema";
 import { GenerateInitValues } from "./utils/generateInitValues";
-import "./index.css";
 import { GenerateVisibilityConditions } from "./utils/generateVisibilityConditions";
-
-const inputComponents: { [x: string]: { [x: string]: (props: any) => JSX.Element } } = {
-  antd: {
-    text: TextInput,
-    email: TextInput,
-  },
-};
-
-// const CreateCondition = (writtenCondition: string | undefined): Function => {
-//   console.log("CreateCondition");
-//   // eslint-disable-next-line no-new-func
-//   return new Function("values", `return ${writtenCondition || "true"};`);
-// };
+// Style
+import "./index.css";
 
 export const RenderField = (
   formikContext: FormikProps<any>,
   visibilityConditions: { [x: string]: Function },
+  ui: possibleUis,
   x: schemaField,
   i: number,
   beforeName: string
 ) => {
   const fullName = beforeName + x.name;
-
-  
-
-  // console.log(fullName);
-  // console.log(formikContext.values[fullName]); //<------------ SYNTHETIC BASE EVENT ???????????
-
-  // return (<div className="fieldd" key={fullName}>
-
-  // </div>
 
   if (x.type === "array") {
     const example: any = {};
@@ -50,17 +41,27 @@ export const RenderField = (
           render={({ insert, remove, push }) => {
             const arrayElements = formikContext.values[fullName]
               ? formikContext.values[fullName].map((xx: any, ii: any) =>
-                  x.fields.map((xxx, iii) =>
-                    {
-                      // const VisibleCondition: Function = CreateCondition(xxx.visible);
-                    
-                      // if (!VisibleCondition(formikContext.values)) return <React.Fragment></React.Fragment>;
-                      // else 
-                      return RenderField(formikContext, visibilityConditions, xxx, iii, `${fullName}[${ii}].`)}
-                  )
+                  x.fields.map((xxx, iii) => {
+                    return RenderField(
+                      formikContext,
+                      visibilityConditions,
+                      ui,
+                      xxx,
+                      iii,
+                      `${fullName}[${ii}].`
+                    );
+                  })
                 )
               : [];
-            return ArrayInput(arrayElements, () => push(example), remove, x);
+            return (
+              <ArrayInput
+                ui={ui}
+                onAdd={() => push(example)}
+                arrayElements={arrayElements}
+                remove={remove}
+                x={x}
+              />
+            );
           }}
         />
       </div>
@@ -73,14 +74,11 @@ export const RenderField = (
       meta: formikContext.getFieldMeta(fullName),
       helpers: formikContext.getFieldHelpers(fullName),
       setFieldValue: formikContext.setFieldValue,
+      ui: ui,
     };
     return (
       <div className="fieldd" key={fullName}>
-        <Field
-          {...fieldProps}
-          component={inputComponents["antd"][x.type]}
-          onChange={null}
-        />
+        <Field {...fieldProps} component={FieldComponent} onChange={null} />
       </div>
     );
   }
@@ -89,43 +87,57 @@ export const RenderField = (
 const FormikBuilder = ({
   schema,
   initialValues,
+  ui,
 }: {
   schema: schema;
   initialValues?: any;
+  ui: possibleUis;
 }) => {
   const visibilityConditions = GenerateVisibilityConditions(schema.fields);
   return (
-  <React.Fragment>
-    <FormTitle text={schema.title} />
-    <Formik
-      initialValues={GenerateInitValues(schema.fields, initialValues)}
-      // initialValues={initialValues || {}}
-      onSubmit={async (values) => {
-        await new Promise((r) => setTimeout(r, 500));
+    <React.Fragment>
+      <FormTitle ui={ui} text={schema.title} {...ui} />
+      <Formik
+        initialValues={GenerateInitValues(schema.fields, initialValues)}
+        onSubmit={async (values) => {
+          await new Promise((r) => setTimeout(r, 500));
 
-        console.log(values);
-        alert(JSON.stringify(values, null, 2));
-      }}
-      validationSchema={GenerateYupSchema(schema.fields)}
-    >
-      {(formikContext) => (
-        <Form>
-          {/* {ArrayField(formikContext, x, "", undefined)} */}
-          {schema.fields.map((x, i) => {
-            return RenderField(formikContext, visibilityConditions, x, i, "");
-          })}
-          <SubmitButton text={schema.submitButtonText} />
-        </Form>
-      )}
-    </Formik>
-  </React.Fragment>
-)};
+          console.log(values);
+          alert(JSON.stringify(values, null, 2));
+        }}
+        validationSchema={GenerateYupSchema(schema.fields)}
+      >
+        {(formikContext) => (
+          <Form>
+            {schema.fields.map((x, i) => {
+              return RenderField(formikContext, visibilityConditions, ui, x, i, "");
+            })}
+            <SubmitButton ui={ui} text={schema.submitButtonText} />
+          </Form>
+        )}
+      </Formik>
+    </React.Fragment>
+  );
+};
 
-const FormikBuilderExample = () => {
+export default FormikBuilder;
+
+// ============================================ USAGE EXAMPLE:
+
+export const FormikBuilderExample = () => {
   const schema: schema = {
     title: "Invite Friends",
     submitButtonText: "Invite",
     fields: [
+      {
+        name: "dias",
+        type: "number",
+      },
+      {
+        label: "Your phone",
+        name: "phone",
+        type: "phone",
+      },
       {
         name: "yourname",
         label: "Your Name",
@@ -155,19 +167,16 @@ const FormikBuilderExample = () => {
   return (
     <FormikBuilder
       schema={schema}
-      initialValues={
-        {
-          yourname: "ha",
-          // friends: [
-          //   {
-          //     name: "Hola",
-          //     email: ""
-          //   }
-          // ]
-        }
-      }
+      initialValues={{
+        yourname: "ha",
+        // friends: [
+        //   {
+        //     name: "Hola",
+        //     email: ""
+        //   }
+        // ]
+      }}
+      ui="antd"
     />
   );
 };
-
-export default FormikBuilderExample;

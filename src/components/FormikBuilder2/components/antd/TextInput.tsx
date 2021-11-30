@@ -1,25 +1,26 @@
 import { Input } from "antd";
-import { FieldAttributes, FieldMetaProps } from "formik";
 import React from "react";
-import { schemaField } from "../../utils/types";
+import { CommonInputProps } from "../../utils/types";
 import { RedErrorBelow } from "./BasicComponents";
 
 export const TextInput = ({
-  field: { name, onChange, value },
+  field: { name, value },
   meta,
   setFieldValue,
   ...props
-}: {
-  field: FieldAttributes<any>;
-  meta: FieldMetaProps<any>;
-  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
-  fieldInfo: schemaField;
-}) => {
+}: CommonInputProps) => {
   const customHandle = (e: { target: { value: any } }) => {
+
     // console.log(e.target.value);
+    //https://stackoverflow.com/questions/10372862/java-string-remove-all-non-numeric-characters-but-keep-the-decimal-separator
+    if (props.fieldInfo.type === "phone") e.target.value.replaceAll("[^\\d.]", "");
     setFieldValue(name, e.target.value);
   };
   // console.log(name);
+  // let type = "text";
+  // switch (props.fieldInfo.type) {
+  //   case "phone": type = "number";
+  // }
   return (
     <React.Fragment>
       <label htmlFor={props.fieldInfo.name}>{props.fieldInfo.label}</label>
