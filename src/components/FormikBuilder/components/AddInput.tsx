@@ -1,45 +1,36 @@
 import React, { useState, useRef } from "react";
 import { Tag, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
+import { GenericInputComponentProps } from "../utils/types";
 
-// saveInputRef = (input) => { ///////falta!!!!
-//   this.input = input;
-// };
-
-// saveEditInputRef = (input) => {///FAlta!!!
-//   this.editInput = input;
-// };
 
 const tagsInitialvalue = [""];
-const AddInput = () => {
-  // LOTS OF STATES
+interface AddInputProps extends GenericInputComponentProps {
+  
+  
+}
+
+const AddInput = (props: AddInputProps) => {
+  const meta = props.meta;
+  // STATES
   const [tags, setTags] = useState(tagsInitialvalue);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [editInputIndex, setEditInputIndex] = useState(-1);
   const [editInputValue, setEditInputValue] = useState("");
-  //const [input, setInput] = useState("");
 
-  const inputRef = useRef(null);
-  const editInputRef = useRef(null);
+  const inputRef = useRef<Input>(null);
+  const editInputRef = useRef<Input>(null);
 
-  // const SaveInputRef = (ref) => {
-  //   inputRef = ref;
-  // }
-
-  // const SaveEditInputRef = (ref) => {
-  //   editInputRef = ref;
-  // }
-
-  //LOTS OF HANDLERS
-  const handleClose = (removedTag) => {
+  // HANDLERS
+  const handleClose = (removedTag: string) => {
     const allTags = tags.filter((tag) => tag !== removedTag);
     console.log(allTags);
     setTags(allTags);
   };
 
   //HANDLE NEW INPUT
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     console.log("handleInputChange!!");
   };
@@ -55,13 +46,12 @@ const AddInput = () => {
   };
 
   //HANDLE EDIT INPUTS THAT ALREADY EXIST
-  const handleEditInputChange = (e) => {
+  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditInputValue(e.target.value);
     console.log("handleEditInputChange!!");
   };
 
   const handleEditInputConfirm = () => {
-    //this.setState(({ tags, editInputIndex, editInputValue }) => {
     console.log("handleEditInputConfirm!!");
     const newTags = [...tags];
     newTags[editInputIndex] = editInputValue;
@@ -69,18 +59,14 @@ const AddInput = () => {
     setTags(newTags);
     setEditInputIndex(-1);
     setEditInputValue("");
-    //return {
-    //  tags: newTags,
-    //  editInputIndex: -1,
-    //  editInputValue: '',
-    //};
-    // });
   };
 
-  //HANDLE OTHER THINGS THAT HAD TO BE HANDLED
-
-  const handleShowInput = () => {
-    setInputVisible({ inputVisible: true }, () => inputVisible.focus());
+  const handleShowInput = async () => {
+    setInputVisible(true);
+    await setInputValue("");
+    
+    inputRef.current?.focus();
+    //() => inputVisible.focus()
   };
 
   return (
@@ -120,7 +106,8 @@ const AddInput = () => {
                     await setEditInputIndex(index);
                     await setEditInputValue(tag);
 
-                    editInputRef.current.focus();
+                    editInputRef.current?.focus();
+
                     e.preventDefault();
                   }
                 }}
@@ -151,39 +138,10 @@ const AddInput = () => {
           <PlusCircleOutlined /> New Tag
         </Tag>
       )}
+      
     </>
   );
 };
 
-//const isLongTag = tag.length > 20;
-
-//   const tagElem = (
-//     <Tag
-//       className="edit-tag"
-//       key={tag}
-//       closable={index !== 0}
-//       onClose={() => handleClose(tag)}
-//     >
-//       <span
-//         onDoubleClick={e => {
-//           if (index !== 0) {
-//             setState({ editInputIndex: index, editInputValue: tag }, () => {
-//               editInput.focus();
-//             });
-//             e.preventDefault();
-//           }
-//         }}
-//       >
-//         {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-//       </span>
-//     </Tag>
-//   );
-//   return isLongTag ? (
-//     <Tooltip title={tag} key={tag}>
-//       {tagElem}
-//     </Tooltip>
-//   ) : (
-//     tagElem
-//   );
 
 export default AddInput;
