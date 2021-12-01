@@ -38,4 +38,3 @@ const SelectInput = (props: SelectInputProps) => {
 };
 
 export default SelectInput;
-

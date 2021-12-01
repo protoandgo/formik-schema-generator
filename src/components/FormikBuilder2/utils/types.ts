@@ -13,7 +13,7 @@ interface CommonProps {
 }
 
 export interface schemaFieldString extends CommonProps {
-  type: "text" | "email" | "phone" | "textarea" | "password";
+  type: "text" | "email" | "phone" | "password" |'textarea';
   min?: number;
   max?: number;
   valueTooShortMessage?: string; // default --> ./utils/defaultErrorMessages.ts
@@ -52,6 +52,16 @@ export interface schemaFieldArray extends CommonProps {
   type: "array";
   fields: schemaField[];
 }
+
+export interface schemaFieldTextArea extends schemaFieldString {
+  type: 'textarea';
+  rows?: number;
+}
+
+export interface schemaFieldAddInput extends CommonProps{
+  type: 'addinput';
+}
+
 export type schemaField =
   | schemaFieldString
   | schemaFieldCheckbox
@@ -59,7 +69,9 @@ export type schemaField =
   | schemaFieldPasswordConfirm
   | schemaFieldNumber
   | schemaFieldSelect
-  | schemaFieldArray;
+  | schemaFieldArray
+  | schemaFieldTextArea
+  | schemaFieldAddInput;
 export interface schema {
   title: string;
   submitButtonText: string;
@@ -89,5 +101,3 @@ export type ArrayInputProps = {
 export type RedErrorBelowProps = { meta: FieldMetaProps<any> };
 export type FormTitleProps = { text: string };
 export type SubmitButtonProps = { text: string };
-
-// ============================================================================ type for object 'UIComponents' declared at the start of FormikBuilder's index.tsx

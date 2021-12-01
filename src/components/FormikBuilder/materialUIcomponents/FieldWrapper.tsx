@@ -1,7 +1,12 @@
-/* eslint-disable no-new-func */
-import { Field, FieldArray, FieldAttributes, FormikContextType, FormikValues } from "formik";
+import {
+  Field,
+  FieldArray,
+  FieldAttributes,
+  FormikContextType,
+  FormikValues,
+} from "formik";
 import React from "react";
-import { TextInput, SelectInput, CheckboxInput, DateInput} from ".";
+import { TextInput, SelectInput, CheckboxInput, DateInput } from ".";
 import { FieldSchema } from "../utils/types";
 import AddInput from "./AddInput";
 import NumberInput from "./NumberInput";
@@ -12,7 +17,10 @@ const CreateCondition = (writtenCondition: string | undefined): Function => {
 };
 
 // Get Component by type
-export const componentByType = (props: FieldAttributes<any>, fieldParams: FieldSchema) => {
+export const componentByType = (
+  props: FieldAttributes<any>,
+  fieldParams: FieldSchema
+) => {
   switch (fieldParams.type) {
     case "text":
       return <TextInput {...props} {...fieldParams} />;
@@ -28,20 +36,27 @@ export const componentByType = (props: FieldAttributes<any>, fieldParams: FieldS
     //   return <UploadInput {...props} {...fieldParams} />
     case "box":
       // return <BoxArray {...props} {...fieldParams} />;
-      return <FieldArray name={fieldParams.name}>{({ push, remove }) => <BoxArray {...props} {...fieldParams} />}</FieldArray>
-    
-    case 'addInput':
-      return <AddInput {...props} {...fieldParams} />
-    
-    case 'number':
-      return <NumberInput {...props} {...fieldParams} />
-    
+      return (
+        <FieldArray name={fieldParams.name}>
+          {({ push, remove }) => <BoxArray {...props} {...fieldParams} />}
+        </FieldArray>
+      );
+
+    case "addInput":
+      return <AddInput {...props} {...fieldParams} />;
+
+    case "number":
+      return <NumberInput {...props} {...fieldParams} />;
+
     default:
       return <React.Fragment></React.Fragment>;
   }
 };
 
-const FieldWrapper = (props: { fieldParams: FieldSchema; formikContext: FormikContextType<FormikValues> }) => {
+const FieldWrapper = (props: {
+  fieldParams: FieldSchema;
+  formikContext: FormikContextType<FormikValues>;
+}) => {
   const { fieldParams, formikContext } = props;
 
   const VisibleCondition: Function = CreateCondition(fieldParams.visible);
@@ -74,9 +89,11 @@ const FieldWrapper = (props: { fieldParams: FieldSchema; formikContext: FormikCo
     // fieldParams.type === "box" ? (
     //   <FieldArray name={fieldParams.name}>{({ push, remove }) => <BoxArray {...props} {...fieldParams} />}</FieldArray>
     // ) : (
-      <Field name={fieldParams.name}>{(props: FieldAttributes<any>) => componentByType(props, fieldParams)}</Field>
-    // )
+    <Field name={fieldParams.name}>
+      {(props: FieldAttributes<any>) => componentByType(props, fieldParams)}
+    </Field>
   ) : (
+    // )
     <React.Fragment></React.Fragment>
   );
   // ---------------------------------------------
@@ -89,22 +106,21 @@ const FieldWrapper = (props: { fieldParams: FieldSchema; formikContext: FormikCo
 
 export default FieldWrapper;
 
-
 // IDEA FOR FORM STYLES - exmaple //
 const fieldArrangement = [
   {
-    rows: [ "field two", "field one" ], // reordered
+    rows: ["field two", "field one"], // reordered
   },
   {
-    rows: [ "field3" ],
+    rows: ["field3"],
     labelInline: true,
   },
   {
-    columns: [ "field4", "field5", "field6" ],
+    columns: ["field4", "field5", "field6"],
     wrap: true,
   },
   {
-    columns: [ "field7", "field8", "field9" ],
+    columns: ["field7", "field8", "field9"],
     wrap: false,
   },
 ];

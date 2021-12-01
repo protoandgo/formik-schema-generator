@@ -1,4 +1,5 @@
 import { FieldHelperProps, FieldInputProps, FieldMetaProps } from "formik";
+//import AddInput from "../components/AddInput";
 
 
 // Properties common in all types of fields
@@ -67,8 +68,16 @@ interface SelectField extends CommonProps {
   disabledOptions?: string[];
 }
 
+interface AddInput extends CommonProps{
+  type: 'addInput';
+};
+
+interface NumberInput extends CommonProps{
+  type: 'number';
+}
+
 // Any Field
-export type FieldSchema = BoxField | StringGroup | CheckboxField | DateField | PasswordConfirmField | NumberField | SelectField;
+export type FieldSchema = BoxField | StringGroup | CheckboxField | DateField | PasswordConfirmField | NumberField | SelectField | AddInput | NumberInput;
 
 // Form Schema
 export type FormSchema = {
@@ -80,8 +89,8 @@ export type GenericInputComponentProps = {
   // [x: string]: any;
   name: string; // Name of the field
   label?: string; // Title of the field
-  field: FieldInputProps<any>; // To add to the main component, for example: <input {...field}> </input>
-  meta: FieldMetaProps<any>; // To display validation errors
+  field?: FieldInputProps<any>; // To add to the main component, for example: <input {...field}> </input>
+  meta?: FieldMetaProps<any>; // To display validation errors
   // helpers: FieldHelperProps<any>; // To be able to manually set the value if needed
   enabled?: boolean; // To display disabled version if needed
 }

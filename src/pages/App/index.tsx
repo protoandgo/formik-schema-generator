@@ -14,6 +14,7 @@ const App = () => {
           <FormikBuilderExample />
         </Card>
       </Row>
+      
     </React.Fragment>
   );
 };
