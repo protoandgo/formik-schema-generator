@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Field, Form, FieldArray, FormikProps } from "formik";
 import { schema, schemaField } from "./utils/types";
-import { ArrayInput, TextInput, FormTitle, SubmitButton } from "./components/antd";
+import { ArrayInput, TextInput, FormTitle, SubmitButton, NumberInput, CheckboxInput, DateInput, SelectInput, TextAreaInput, AddInput } from "./components/antd";
 import { GenerateYupSchema } from "./utils/generateYupSchema";
 import { GenerateInitValues } from "./utils/generateInitValues";
 import "./index.css";
@@ -11,6 +11,12 @@ const inputComponents: { [x: string]: { [x: string]: (props: any) => JSX.Element
   antd: {
     text: TextInput,
     email: TextInput,
+    number: NumberInput,
+    checkbox: CheckboxInput,
+    date: DateInput,
+    select: SelectInput,
+    textarea: TextAreaInput,
+    addinput: AddInput,
   },
 };
 
@@ -126,6 +132,35 @@ const FormikBuilderExample = () => {
     title: "Invite Friends",
     submitButtonText: "Invite",
     fields: [
+      {
+        name: 'addaninput',
+        type: 'addinput'
+      },
+      {
+        name: 'areatexto',
+        type: 'textarea',
+      },
+      {
+        name: 'seleccion',
+        type: 'select',
+        options: {
+          'value': 'string',
+          'value2': 'string2',
+          'value3': 'string3'
+        }
+      },
+      {
+        name: 'fecha',
+        type: 'date'
+      },
+      {
+        name: 'otracosa',
+        type: 'checkbox'
+      },
+      {
+        name: "loquesea",
+        type: "number"
+      },
       {
         name: "yourname",
         label: "Your Name",

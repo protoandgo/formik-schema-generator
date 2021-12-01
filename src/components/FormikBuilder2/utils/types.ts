@@ -1,3 +1,5 @@
+import { FieldAttributes, FieldMetaProps } from "formik";
+
 interface CommonProps {
   name: string;
   label?: string; // title of the field
@@ -9,7 +11,7 @@ interface CommonProps {
 }
 
 export interface schemaFieldString extends CommonProps {
-  type: "text" | "email" | "phone" | "textarea" | "password";
+  type: "text" | "email" | "phone" | "password" |'textarea';
   min?: number;
   max?: number;
   valueTooShortMessage?: string; // default --> ./utils/defaultErrorMessages.ts
@@ -48,6 +50,16 @@ export interface schemaFieldArray extends CommonProps {
   type: "array";
   fields: schemaField[];
 }
+
+export interface schemaFieldTextArea extends schemaFieldString {
+  type: 'textarea';
+  rows?: number;
+}
+
+export interface schemaFieldAddInput extends CommonProps{
+  type: 'addinput';
+}
+
 export type schemaField =
   | schemaFieldString
   | schemaFieldCheckbox
@@ -55,9 +67,18 @@ export type schemaField =
   | schemaFieldPasswordConfirm
   | schemaFieldNumber
   | schemaFieldSelect
-  | schemaFieldArray;
+  | schemaFieldArray
+  | schemaFieldTextArea
+  | schemaFieldAddInput;
 export interface schema {
   title: string;
   submitButtonText: string;
   fields: schemaField[];
 }
+
+export interface commonProps {
+  field: FieldAttributes<any>;
+  meta: FieldMetaProps<any>;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  fieldInfo: schemaField;
+};

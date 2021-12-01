@@ -7,7 +7,6 @@ import React from "react";
 
 // IMPORT: Formik Builder:
 import FormikBuilder from "../../components/FormikBuilder";
-import AddInput from "../../components/FormikBuilder/materialUIcomponents/AddInput";
 import { FormSchema } from "../../components/FormikBuilder/utils/types";
 import FormikBuilderExample from "../../components/FormikBuilder2";
 
@@ -71,7 +70,6 @@ const exampleData = {
 const App = () => {
   return (
     <React.Fragment>
-    <AddInput name={""} />
       <Row justify="center" align="middle" style={{ height: "100vh", width: "100vw" }}>
         <Card style={{ margin: "30px", marginBottom: "120px", width: "500px" }}>
           {/* <FormikBuilder
@@ -85,7 +83,7 @@ const App = () => {
           <FormikBuilderExample />
         </Card>
       </Row>
-      <AddInput name={"hola"}/>
+      
     </React.Fragment>
   );
 };
