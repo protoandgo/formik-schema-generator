@@ -1,5 +1,5 @@
 import { InputNumber, Typography } from 'antd';
-import { commonProps } from '../../utils/types';
+import { CommonInputProps } from "../../FormikBuilder2/utils/types";
 import {RedErrorBelow} from "./BasicComponents";
 
 
@@ -9,7 +9,7 @@ export const NumberInput = ({
   meta,
   setFieldValue,
   ...props
-}: commonProps) => {
+}: CommonInputProps) => {
   
   const customHandle = (e: number) => {
     console.log(e);

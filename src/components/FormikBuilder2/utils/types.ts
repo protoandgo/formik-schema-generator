@@ -1,5 +1,7 @@
 import { FieldAttributes, FieldMetaProps } from "formik";
 
+// ============================================================================ SCHEMA TYPES
+
 interface CommonProps {
   name: string;
   label?: string; // title of the field
@@ -76,9 +78,26 @@ export interface schema {
   fields: schemaField[];
 }
 
-export interface commonProps {
+// ============================================================================ COMPONENT PROPS TYPES
+
+export interface CommonInputProps {
+  enabled: boolean,
   field: FieldAttributes<any>;
   meta: FieldMetaProps<any>;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  // visible: boolean;
+  // enabled: boolean;
   fieldInfo: schemaField;
+  // alterValidationByVisibility: () => void;
+  inputProps: any;
+}
+
+export type ArrayInputProps = {
+  arrayElements: JSX.Element[];
+  onAdd: () => void;
+  remove: (index: number) => void;
+  x: schemaFieldArray;
 };
+export type RedErrorBelowProps = { meta: FieldMetaProps<any> };
+export type FormTitleProps = { text: string };
+export type SubmitButtonProps = { text: string };
