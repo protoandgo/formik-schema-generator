@@ -4,36 +4,89 @@ import React from "react";
 import { Formik, Field, Form, FieldArray, FormikProps } from "formik";
 // Types
 import { schema, schemaField } from "./utils/types";
-// Components prepared for different UI Libraries
-import {
-  ArrayInput,
-  FieldComponent,
-  FormTitle,
-  possibleUis,
-  SubmitButton,
-} from "./components";
 // Generators
 import { GenerateYupSchema } from "./utils/generateYupSchema";
 import { GenerateInitValues } from "./utils/generateInitValues";
-import { GenerateVisibilityConditions } from "./utils/generateVisibilityConditions";
+import { GenerateConditionsFor } from "./utils/generateConditions";
 // Style
 import "./index.css";
 
-export const RenderField = (
+type Components =  { [x: string]: (...props: any) => JSX.Element };
+
+type GeneralData = {
   formikContext: FormikProps<any>,
   visibilityConditions: { [x: string]: Function },
-  ui: possibleUis,
-  x: schemaField,
-  i: number,
-  beforeName: string
-) => {
-  const fullName = beforeName + x.name;
+  enabledConditions:{ [x: string]: Function },
+}
 
-  if (x.type === "array") {
+export const RenderField = (
+  // enabled: boolean,
+  // formikContext: FormikProps<any>,
+  // visibilityConditions: { [x: string]: Function },
+  // ui: possibleUis,
+  fieldd: schemaField,
+  // index: number,
+  beforeName: string,
+  generalData: GeneralData,
+  components: Components,
+) => {
+  const fullName = beforeName + fieldd.name;
+  const { formikContext, visibilityConditions, enabledConditions } = generalData;
+
+  const setValidate = (values: any, beforeName?: string) => {
+    (/*Array.isArray(values) ? values : */Object.entries(values)).forEach(([key, value], i) => {
+      if (!key.startsWith("validate_")) {
+        // if (Array.isArray(value)) {
+        //   setValidate(value, `${beforeName + key}[i]`)
+        // }
+        // else {
+          formikContext.setFieldValue(`validate_${beforeName + key}`,
+          visibilityConditions[key] ? visibilityConditions[key](formikContext.values) : true &&
+          enabledConditions[key] ? enabledConditions[key](formikContext.values) : true)
+        // }
+      }
+    })
+  }
+
+  const checkIfValuesShouldBeValidated = () => {
+    setValidate(formikContext.values, "");
+    // // DONT VALIDATE IF NOT VISIBLE:
+    // Object.entries(visibilityConditions).forEach(([key, value], i) => {
+    //   formikContext.setFieldValue(`isVisible_${key}`, value(formikContext.values))
+    // })
+    // // DONT VALIDATE IF NOT ENABLED:
+    // Object.entries(enabledConditions).forEach(([key, value], i) => {
+    //   formikContext.setFieldValue(`isEnabled_${key}`, value(formikContext.values))
+    // })
+    // DONT VALIDATE IF NOT ENABLED:
+    let beforeName = "";
+    // Object.entries(formikContext.values).forEach(([key, value], i) => {
+    //   if (!key.startsWith("validate_")) {
+    //     if (Array.isArray(value)) {
+
+    //     }
+    //     else {
+    //       formikContext.setFieldValue(`validate_${beforeName + key}`,
+    //       visibilityConditions[key] ? visibilityConditions[key](formikContext.values) : true &&
+    //       enabledConditions[key] ? enabledConditions[key](formikContext.values) : true)
+    //     }
+    //   }
+    // })
+  }
+
+  // console.log(visibilityConditions);
+  if (visibilityConditions[fullName] && !visibilityConditions[fullName](formikContext.values))
+    return <span>INVISIBLEEE</span>
+  
+  const enabled = !enabledConditions[fullName] || enabledConditions[fullName](formikContext.values);
+    
+
+  if (fieldd.type === "array") {
     const example: any = {};
-    x.fields.forEach((xx, ii) => {
+    fieldd.fields.forEach((xx, ii) => {
       example[xx.name] = "";
     });
+    // TODO array can also be disabled entirely
     return (
       <div className="fieldd" key={fullName}>
         <FieldArray
@@ -41,25 +94,27 @@ export const RenderField = (
           render={({ insert, remove, push }) => {
             const arrayElements = formikContext.values[fullName]
               ? formikContext.values[fullName].map((xx: any, ii: any) =>
-                  x.fields.map((xxx, iii) => {
+                  fieldd.fields.map((subfieldd, subindex) => {
                     return RenderField(
-                      formikContext,
-                      visibilityConditions,
-                      ui,
-                      xxx,
-                      iii,
-                      `${fullName}[${ii}].`
+                      // enabled,
+                      // formikContext,
+                      // visibilityConditions,
+                      // ui,
+                      subfieldd,
+                      // subindex,
+                      `${fullName}[${ii}].`,
+                      generalData,
+                      components,
                     );
                   })
                 )
               : [];
             return (
-              <ArrayInput
-                ui={ui}
+              <components.ArrayInput
                 onAdd={() => push(example)}
                 arrayElements={arrayElements}
                 remove={remove}
-                x={x}
+                x={fieldd}
               />
             );
           }}
@@ -68,17 +123,40 @@ export const RenderField = (
     );
   } else {
     const fieldProps = {
+      enabled,
       name: fullName,
-      fieldInfo: x, // label, options si es un select, etc
+      fieldInfo: fieldd, // label, options si es un select, etc
       field: formikContext.getFieldProps(fullName),
       meta: formikContext.getFieldMeta(fullName),
       helpers: formikContext.getFieldHelpers(fullName),
       setFieldValue: formikContext.setFieldValue,
-      ui: ui,
+      // visible: !visibilityConditions[fullName] || visibilityConditions[fullName](formikContext.values),
+      // enabled: !enabledConditions[fullName] || enabledConditions[fullName](formikContext.values),
+      // components: components,
+      inputProps: {
+        onBlur: checkIfValuesShouldBeValidated
+        // onBlur: () => {
+        //   // DONT VALIDATE IF NOT VISIBLE:
+        //   Object.entries(visibilityConditions).forEach(([key, value], i) => {
+        //     formikContext.setFieldValue(`isVisible_${key}`, value(formikContext.values))
+        //   })
+        //   // DONT VALIDATE IF NOT ENABLED:
+        //   Object.entries(enabledConditions).forEach(([key, value], i) => {
+        //     formikContext.setFieldValue(`isEnabled_${key}`, value(formikContext.values))
+        //   })
+        //   // DONT VALIDATE IF NOT ENABLED:
+        //   // Object.keys(formikContext.values).forEach((fullNamee, i) => {
+        //   //   if (!fullNamee.startsWith("validate_"))
+        //   //   formikContext.setFieldValue(`validate_${fullNamee}`,
+        //   //     visibilityConditions[fullNamee] ? visibilityConditions[fullNamee](formikContext.values) : true &&
+        //   //     enabledConditions[fullNamee] ? enabledConditions[fullNamee](formikContext.values) : true)
+        //   // })
+        // }
+      }
     };
     return (
       <div className="fieldd" key={fullName}>
-        <Field {...fieldProps} component={FieldComponent} onChange={null} />
+        <Field {...fieldProps} component={components[fieldd.type]  || ((props: any) => <span>No component given for field of type {fieldd.type}</span>)} onChange={null} />
       </div>
     );
   }
@@ -87,16 +165,19 @@ export const RenderField = (
 const FormikBuilder = ({
   schema,
   initialValues,
-  ui,
+  // ui,
+  components
 }: {
   schema: schema;
   initialValues?: any;
-  ui: possibleUis;
+  // ui: possibleUis;
+  components: Components;
 }) => {
-  const visibilityConditions = GenerateVisibilityConditions(schema.fields);
+  const visibilityConditions = GenerateConditionsFor('visible', schema.fields);
+  const enabledConditions = GenerateConditionsFor('enabled', schema.fields);
   return (
     <React.Fragment>
-      <FormTitle ui={ui} text={schema.title} {...ui} />
+      <components.FormTitle text={schema.title} />
       <Formik
         initialValues={GenerateInitValues(schema.fields, initialValues)}
         onSubmit={async (values) => {
@@ -107,76 +188,24 @@ const FormikBuilder = ({
         }}
         validationSchema={GenerateYupSchema(schema.fields)}
       >
-        {(formikContext) => (
+        {(formikContext) => {
+          
+  const persistent: GeneralData = {
+    formikContext: formikContext,
+    visibilityConditions: visibilityConditions,
+    enabledConditions: enabledConditions,
+  };
+          return (
           <Form>
             {schema.fields.map((x, i) => {
-              return RenderField(formikContext, visibilityConditions, ui, x, i, "");
+              return RenderField(x, /*i, */"", persistent, components);
             })}
-            <SubmitButton ui={ui} text={schema.submitButtonText} />
+            <components.SubmitButton text={schema.submitButtonText} />
           </Form>
-        )}
+        )}}
       </Formik>
     </React.Fragment>
   );
 };
 
 export default FormikBuilder;
-
-// ============================================ USAGE EXAMPLE:
-
-export const FormikBuilderExample = () => {
-  const schema: schema = {
-    title: "Invite Friends",
-    submitButtonText: "Invite",
-    fields: [
-      {
-        name: "dias",
-        type: "number",
-      },
-      {
-        label: "Your phone",
-        name: "phone",
-        type: "phone",
-      },
-      {
-        name: "yourname",
-        label: "Your Name",
-        type: "text",
-        required: true,
-        min: 4,
-      },
-      {
-        name: "friends",
-        label: "Friends",
-        type: "array",
-        fields: [
-          {
-            name: "name",
-            label: "Name",
-            type: "text",
-          },
-          {
-            name: "email",
-            label: "Email",
-            type: "email",
-          },
-        ],
-      },
-    ],
-  };
-  return (
-    <FormikBuilder
-      schema={schema}
-      initialValues={{
-        yourname: "ha",
-        // friends: [
-        //   {
-        //     name: "Hola",
-        //     email: ""
-        //   }
-        // ]
-      }}
-      ui="antd"
-    />
-  );
-};

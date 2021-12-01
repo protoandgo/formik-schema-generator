@@ -1,22 +1,26 @@
 import * as Yup from "yup";
-import { ObjectShape } from "yup/lib/object";
+import { AnyObject, ObjectShape } from "yup/lib/object";
 import defaultErrorMessages from "./defaultErrorMessages";
 import { schemaField, schemaFieldString } from "./types";
 
 // https://stackoverflow.com/questions/57928271/create-yup-nested-object-schema-dynamically
 
 type YupSchema =
+  // | Yup.MixedSchema<any, AnyObject, any>
   | Yup.ArraySchema<Yup.ObjectSchema<ObjectShape>>
   | Yup.StringSchema
   | Yup.NumberSchema
   | Yup.BooleanSchema
   | Yup.DateSchema;
 
-export const GenerateYupSchema = (fields: schemaField[]) => {
+export const GenerateYupSchema = (fields: schemaField[], beforeName?: string) => {
+  console.log("GenerateYupSchema");
   // Map through each field to build a Yup validation schema
   const schema: any = fields.reduce((schema, field) => {
+    const fullName = (beforeName || "") + field.name;
+
     // <-------------------- ANY
-    let yupSchemaPart: YupSchema = Yup.string();
+    let yupSchemaPart: /*YupSchema*/ any = Yup.string();
 
     // ============ Type?
     const invalidFormatMsg = defaultErrorMessages.invalidFormat(field.type);
@@ -83,7 +87,7 @@ export const GenerateYupSchema = (fields: schemaField[]) => {
         break;
 
       case "array":
-        yupSchemaPart = Yup.array().of(GenerateYupSchema(field.fields));
+        yupSchemaPart = Yup.array().of(GenerateYupSchema(field.fields, "field"));
         break;
     }
 
@@ -93,6 +97,16 @@ export const GenerateYupSchema = (fields: schemaField[]) => {
         field.requiredMessage || defaultErrorMessages.required
       );
     }
+
+    // Dont validate if not visible or not enabled
+    // yupSchemaPart = Yup.mixed().when([`isVisible_${field.name}`, `isEnabled_${field.name}`], {
+    //   is: (visible: boolean, enabled: boolean) => visible && enabled,
+    //   then: yupSchemaPart
+    // });
+    yupSchemaPart = Yup.mixed().when(`validate_${field.name}`, {
+      is: true,
+      then: yupSchemaPart
+    });
 
     // ============ Return
     return { ...schema, [field.name]: yupSchemaPart };

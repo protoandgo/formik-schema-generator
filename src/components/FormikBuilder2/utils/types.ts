@@ -69,10 +69,15 @@ export interface schema {
 // ============================================================================ COMPONENT PROPS TYPES
 
 export interface CommonInputProps {
+  enabled: boolean,
   field: FieldAttributes<any>;
   meta: FieldMetaProps<any>;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  // visible: boolean;
+  // enabled: boolean;
   fieldInfo: schemaField;
+  // alterValidationByVisibility: () => void;
+  inputProps: any;
 }
 
 export type ArrayInputProps = {

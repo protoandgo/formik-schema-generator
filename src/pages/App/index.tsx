@@ -2,7 +2,8 @@ import { Card, Row } from "antd";
 import React from "react";
 
 // Examples:
-import { FormikBuilderExample } from "../../components/FormikBuilder2";
+// import { FormikBuilderExample } from "../../components/FormikBuilder2";
+import FormikBuilderExample from "../../components/FormikBuilder2/FormikBuilderExample"
 
 // Functional Component:
 const App = () => {

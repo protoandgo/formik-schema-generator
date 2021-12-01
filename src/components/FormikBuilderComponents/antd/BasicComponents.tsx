@@ -1,6 +1,6 @@
 import { MinusSquareOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { Space, Card, Button, Typography } from "antd";
-import { ArrayInputProps, FormTitleProps, RedErrorBelowProps, SubmitButtonProps } from "../../utils/types";
+import { ArrayInputProps, FormTitleProps, RedErrorBelowProps, SubmitButtonProps } from "../../FormikBuilder2/utils/types";
 
 export const ArrayInput = ({
   arrayElements: arrayFields,
