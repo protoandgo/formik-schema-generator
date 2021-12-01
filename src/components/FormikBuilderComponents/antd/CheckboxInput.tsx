@@ -1,6 +1,6 @@
 import { Checkbox, Typography } from "antd";
 import React from "react";
-import { commonProps } from "../../utils/types";
+import { CommonInputProps } from "../../FormikBuilder2/utils/types";
 import {RedErrorBelow} from "./BasicComponents";
 
 export const CheckboxInput = ({
@@ -8,7 +8,7 @@ export const CheckboxInput = ({
   meta,
   setFieldValue,
   ...props
-}: commonProps) => {
+}: CommonInputProps) => {
   const customHandle = (e: any)=>{
     setFieldValue(name, e)
   }

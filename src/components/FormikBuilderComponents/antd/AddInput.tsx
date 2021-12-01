@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { Tag, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { commonProps } from "../../utils/types";
+import { CommonInputProps } from "../../FormikBuilder2/utils/types";
+
 
 
 const tagsInitialvalue :string[]= [];
@@ -12,7 +13,7 @@ export const AddInput = ({
   meta,
   setFieldValue,
   ...props
-}: commonProps) => {
+}: CommonInputProps) => {
   // STATES
   const [tags, setTags] = useState(tagsInitialvalue);
   const [inputVisible, setInputVisible] = useState(false);

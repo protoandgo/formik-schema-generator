@@ -1,6 +1,6 @@
 import { DatePicker, Typography } from "antd";
 import moment from "moment";
-import { commonProps } from "../../utils/types";
+import { CommonInputProps } from "../../FormikBuilder2/utils/types";
 import {RedErrorBelow} from "./BasicComponents";
 
 export const DateInput = ({
@@ -8,7 +8,7 @@ export const DateInput = ({
   meta,
   setFieldValue,
   ...props
-}: commonProps) => {
+}: CommonInputProps) => {
   const customHandle = (dateObj: moment.Moment) => {
 
 

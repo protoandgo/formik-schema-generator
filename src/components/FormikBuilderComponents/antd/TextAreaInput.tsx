@@ -1,5 +1,5 @@
 import { Input, Typography } from 'antd';
-import { commonProps, schemaFieldTextArea } from "../../utils/types";
+import { CommonInputProps, schemaFieldTextArea } from "../../FormikBuilder2/utils/types";
 import { RedErrorBelow } from './BasicComponents';
 const { TextArea } = Input;
 
@@ -9,7 +9,7 @@ export const TextAreaInput = ({
   meta,
   setFieldValue,
   ...props
-}: commonProps) => {
+}: CommonInputProps) => {
   
   const customHandle = (e: { target: { value: any } }) => {
     setFieldValue(name, e.target.value);

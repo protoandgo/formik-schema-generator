@@ -3,7 +3,7 @@ import React from "react";
 
 // Examples:
 // import { FormikBuilderExample } from "../../components/FormikBuilder2";
-import FormikBuilderExample from "../../components/FormikBuilder2/FormikBuilderExample"
+import FormikBuilderExample from "./FormikBuilderExample"
 
 // Functional Component:
 const App = () => {

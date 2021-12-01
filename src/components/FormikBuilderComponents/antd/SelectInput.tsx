@@ -1,6 +1,6 @@
 import { Select, Typography } from "antd";
 import React from "react";
-import { commonProps, schemaFieldSelect } from "../../utils/types";
+import { CommonInputProps, schemaFieldSelect } from "../../FormikBuilder2/utils/types";
 import {RedErrorBelow} from "./BasicComponents";
 
 
@@ -9,7 +9,7 @@ export const SelectInput = ({
   meta,
   setFieldValue,
   ...props
-}: commonProps) => {
+}: CommonInputProps) => {
  
   const ShowOptions = (options: { [value: string]: string }) => {
     const list = [];

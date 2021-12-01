@@ -1,7 +1,7 @@
 // Types
-import FormikBuilder from ".";
-import { ArrayInput, FormTitle, SubmitButton, RedErrorBelow, TextInput } from "../FormikBuilderComponents/antd";
-import { schema } from "./utils/types";
+import FormikBuilder from "../../components/FormikBuilder2";
+import { ArrayInput, TextInput, FormTitle, SubmitButton, NumberInput, CheckboxInput, DateInput, SelectInput, TextAreaInput, AddInput } from "../../components/FormikBuilderComponents/antd";
+import { schema } from "../../components/FormikBuilder2/utils/types";
 
 const FormikBuilderExample = () => {
     const schema: schema = {
@@ -62,12 +62,17 @@ const FormikBuilderExample = () => {
           ArrayInput: ArrayInput,
           FormTitle: FormTitle,
           SubmitButton: SubmitButton,
-          RedErrorBelow: RedErrorBelow,
       
           // by type
           text: TextInput,
           email: TextInput,
           phone: TextInput,
+          number: NumberInput,
+          checkbox: CheckboxInput,
+          date: DateInput,
+          select: SelectInput,
+          textarea: TextAreaInput,
+          addinput: AddInput,
           // TextInput: TextInput,
         }}
       />
