@@ -1,7 +1,7 @@
 import { Checkbox, Typography } from "antd";
 import React from "react";
-import { CommonInputProps } from "../../FormikBuilder2/utils/types";
-import {RedErrorBelow} from "./BasicComponents";
+import { CommonInputProps } from "../../FormikBuilder2/utils/typesOld";
+import { RedErrorBelow } from "./BasicComponents";
 
 export const CheckboxInput = ({
   field: { name, onChange, value },
@@ -9,19 +9,17 @@ export const CheckboxInput = ({
   setFieldValue,
   ...props
 }: CommonInputProps) => {
-  const customHandle = (e: any)=>{
-    setFieldValue(name, e)
-  }
+  const customHandle = (e: { target: { checked: boolean } }) => {
+    setFieldValue(name, e.target.checked);
+  };
   return (
-    <>
-      <Typography>
-        <label htmlFor={props.fieldInfo.name}>{props.fieldInfo.label}</label>
-      </Typography>
-
-      <Checkbox name={name} type= 'checkbox' value={value} onChange={customHandle} />
+    <React.Fragment>
+      <Checkbox name={name} type="checkbox" checked={value} onChange={customHandle}>
+        <Typography.Text>
+          <label htmlFor={name}>{props.fieldInfo.label}</label>
+        </Typography.Text>
+      </Checkbox>
       <RedErrorBelow meta={meta} />
-    </>
+    </React.Fragment>
   );
 };
-
-

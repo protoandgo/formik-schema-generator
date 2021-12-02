@@ -1,5 +1,5 @@
 import { Input, Typography } from 'antd';
-import { CommonInputProps, schemaFieldTextArea } from "../../FormikBuilder2/utils/types";
+import { CommonInputProps, schemaFieldTextArea } from "../../FormikBuilder2/utils/typesOld";
 import { RedErrorBelow } from './BasicComponents';
 const { TextArea } = Input;
 

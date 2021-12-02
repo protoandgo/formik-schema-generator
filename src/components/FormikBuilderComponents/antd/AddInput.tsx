@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Tag, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { CommonInputProps } from "../../FormikBuilder2/utils/types";
+import { CommonInputProps } from "../../FormikBuilder2/utils/typesOld";
 
 
 

@@ -1,46 +1,133 @@
 // Types
 import FormikBuilder from "../../components/FormikBuilder2";
 import { ArrayInput, TextInput, FormTitle, SubmitButton, NumberInput, CheckboxInput, DateInput, SelectInput, TextAreaInput, AddInput } from "../../components/FormikBuilderComponents/antd";
-import { schema } from "../../components/FormikBuilder2/utils/types";
+import { schema, schemaField } from "../../components/FormikBuilder2/utils/types";
+
+interface schemaExampleWithAllTypes extends schema {
+  fields: [
+    { type: 'text' } & schemaField,
+    { type: 'password' } & schemaField,
+    { type: 'textarea' } & schemaField,
+    { type: 'checkbox' } & schemaField,
+    { type: 'date' } & schemaField,
+    { type: 'number' } & schemaField,
+    { type: 'select' } & schemaField,
+    { type: 'array' } & schemaField,
+    { type: 'addinput' } & schemaField,
+  ]
+}
 
 const FormikBuilderExample = () => {
-    const schema: schema = {
+    const schema: schemaExampleWithAllTypes = {
       title: "Invite Friends",
       submitButtonText: "Invite",
       fields: [
         {
-          name: "dias",
-          type: "number",
-        },
-        {
-          label: "Your phone",
-          name: "phone",
-          type: "phone",
-          enabled: "values.yourname === 'keyy'"
-        },
-        {
-          name: "yourname",
           label: "Your Name",
+          id: "yourname",
           type: "text",
-          required: true,
-          min: 4,
+          // validator: [
+          //   [ 'string', 'has to be text' ],
+          //   [ 'min', 4 ],
+          //   [ 'aaaa', 'eeeee' ],
+          // ]
+          validator: {
+            when: ['desc', {
+                is: 'demo',
+                then: [
+                    ["string", "Your name must be a string"],
+                    [ 'min', 6, 'SIX CHARACTERS MINIMUM' ],
+                ],
+                otherwise: [
+                    ["string", "Your name must be a string"]
+                ]
+            }]
+        }
+        },
+        // {
+        //   label: "Tu Email:",
+        //   type: 'email',
+        //   id: "email",
+        // },
+        // {
+        //   label: "Your phone",
+        //   id: "phone",
+        //   type: "phone",
+        //   enabled: "values.yourname === 'keyy'"
+        // },
+        {
+          label: "Contaseña",
+          id: "pass",
+          type: 'password'
+        },
+        // {
+        //   label: "Repite",
+        //   id: "pass2",
+        //   type: "passwordconfirm",
+        //   passwordFieldid: "pass"
+        // },
+        {
+          label: "Descripcion de la fiesta",
+          id: "desc",
+          type: "textarea",
+          rows: 5,
         },
         {
-          name: "friends",
-          label: "Friends",
+          label: 'Obligatorio sombreritos de colores',
+          type: 'checkbox',
+          id: 'hats',
+        },
+        {
+          label: "Fecha de la fiesta:",
+          type: 'date',
+          id: 'partydate',
+        },
+        {
+          label: "Dias que va a durar la fiesta",
+          id: "dias",
+          type: "number",
+          // validator: [
+          //   [ 'number', 'pls write number' ],
+          //   [ 'min', 4 ],
+          //   [ 'aaaa', 'eeeee' ],
+          // ]
+        },
+        {
+          label: "Traer confetti",
+          id: "opcion",
+          type: "select",
+          options: {
+            rojo: "Rojo",
+            azul: "Azul",
+            amarillo: "Amarillo"
+          }
+        },
+        {
+          label: "Amigos",
+          id: "friends",
           type: "array",
           fields: [
             {
-              name: "name",
+              id: "name",
               label: "Name",
               type: "text",
             },
+            // {
+            //   id: "email",
+            //   label: "Email",
+            //   type: "email",
+            // },
             {
-              name: "email",
-              label: "Email",
-              type: "email",
-            },
+              type: 'checkbox',
+              id: 'ok',
+              label: 'El invitado acepta los terminos'
+            }
           ],
+        },
+        {
+          type: 'addinput',
+          id: 'adders',
+          label: "Aqui pon cosas"
         },
       ],
     };
@@ -67,11 +154,13 @@ const FormikBuilderExample = () => {
           text: TextInput,
           email: TextInput,
           phone: TextInput,
-          number: NumberInput,
+          password: TextInput,
+          passwordconfirm: TextInput,
+          textarea: TextAreaInput,
           checkbox: CheckboxInput,
           date: DateInput,
+          number: NumberInput,
           select: SelectInput,
-          textarea: TextAreaInput,
           addinput: AddInput,
           // TextInput: TextInput,
         }}

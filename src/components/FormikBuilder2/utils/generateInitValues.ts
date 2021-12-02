@@ -3,24 +3,24 @@ import { schemaField } from "./types";
 export const GenerateInitValues = (schemaFields: schemaField[], initialValues?: any) => {
   if (!initialValues) initialValues = {};
   schemaFields.forEach((field) => {
-    if (field.type === "array") {
-      initialValues[field.name] = GenerateInitValues(field.fields, []);
-    } else if (initialValues[field.name] === undefined) {
+    if (field.type === "array" && field.fields) {
+      initialValues[field.id] = GenerateInitValues(field.fields, []);
+    } else if (initialValues[field.id] === undefined) {
       if (["text", "email", "password", "phone", "textarea"].includes(field.type))
-        initialValues[field.name] = "";
+        initialValues[field.id] = "";
       else
         switch (field.type) {
           case "number":
-            initialValues[field.name] = 0;
+            initialValues[field.id] = 0;
             break;
           case "checkbox":
-            initialValues[field.name] = false;
+            initialValues[field.id] = false;
             break;
           // case "date":
-          //   initialValuesEmpty[field.name] = moment().toISOString();
+          //   initialValuesEmpty[field.id] = moment().toISOString();
           //   break;
           case "select":
-            initialValues[field.name] = field.options[0];
+            if (field.options) initialValues[field.id] = field.options[0];
             break;
         }
     }

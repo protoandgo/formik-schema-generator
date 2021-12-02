@@ -15,10 +15,10 @@ export const GenerateConditionsFor = (
   console.log("Generating conditions");
   let condition: { [x: string]: Function } = {};
   fields.forEach(x => {
-    const fullName = (beforeName || "") + x.name;
+    const fullName = (beforeName || "") + x.id;
     if (forWhat === 'visible' && x.visible) condition[fullName] = CreateCondition(x.visible);
     else if (forWhat === 'enabled' && x.enabled) condition[fullName] = CreateCondition(x.enabled);
-    if (x.type === "array") {
+    if (x.type === "array" && x.fields) {
       const arrayFieldsVisible = GenerateConditionsFor(forWhat, x.fields, fullName);
       condition = {...condition, ...arrayFieldsVisible}; // Object.assign ??
     }
@@ -32,7 +32,7 @@ export const GenerateConditionsFor = (
 // ): { [x: string]: Function } => {
 //   let visible: { [x: string]: Function } = {};
 //   fields.forEach(x => {
-//     const fullName = (beforeName || "") + x.name;
+//     const fullName = (beforeName || "") + x.id;
 //     if (x.visible) visible[fullName] = CreateCondition(x.visible);
 //     if (x.type === "array") {
 //       const arrayFieldsVisible = GenerateVisibilityConditions(x.fields, fullName);

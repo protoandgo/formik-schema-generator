@@ -1,5 +1,5 @@
 import { InputNumber, Typography } from 'antd';
-import { CommonInputProps } from "../../FormikBuilder2/utils/types";
+import { CommonInputProps } from "../../FormikBuilder2/utils/typesOld";
 import {RedErrorBelow} from "./BasicComponents";
 
 

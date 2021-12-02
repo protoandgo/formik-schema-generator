@@ -1,6 +1,6 @@
 import { Input } from "antd";
 import React from "react";
-import { CommonInputProps } from "../../FormikBuilder2/utils/types";
+import { CommonInputProps } from "../../FormikBuilder2/utils/typesOld";
 import { RedErrorBelow } from "./BasicComponents";
 
 export const TextInput = ({

@@ -1,6 +1,6 @@
 import { Select, Typography } from "antd";
 import React from "react";
-import { CommonInputProps, schemaFieldSelect } from "../../FormikBuilder2/utils/types";
+import { CommonInputProps, schemaFieldSelect } from "../../FormikBuilder2/utils/typesOld";
 import {RedErrorBelow} from "./BasicComponents";
 
 

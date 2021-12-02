@@ -1,6 +1,6 @@
 import { DatePicker, Typography } from "antd";
 import moment from "moment";
-import { CommonInputProps } from "../../FormikBuilder2/utils/types";
+import { CommonInputProps } from "../../FormikBuilder2/utils/typesOld";
 import {RedErrorBelow} from "./BasicComponents";
 
 export const DateInput = ({
@@ -11,7 +11,7 @@ export const DateInput = ({
 }: CommonInputProps) => {
   const customHandle = (dateObj: moment.Moment) => {
 
-
+    console.log(dateObj);
     setFieldValue(name, dateObj);
   };
   return (
@@ -23,7 +23,7 @@ export const DateInput = ({
       <DatePicker
         name={name}
         //type= 'moment'
-        defaultValue={moment('YYYY-MM-DD')}
+        // defaultValue={moment('YYYY-MM-DD')}
         value={value}
         onOk={customHandle}
       />
