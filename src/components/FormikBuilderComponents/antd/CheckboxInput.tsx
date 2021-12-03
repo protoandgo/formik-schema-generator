@@ -1,27 +1,23 @@
-import { Checkbox, Typography } from "antd";
+import { Checkbox } from "antd";
 import React from "react";
-import { CommonInputProps } from "../../FormikBuilder2/utils/types";
-import {RedErrorBelow} from "./BasicComponents";
+import { componentCommonProps } from "../../FormikBuilder/utils/types";
+import { FieldLabel, RedErrorBelow } from "./BasicComponents";
 
 export const CheckboxInput = ({
-  field: { name, onChange, value },
-  meta,
-  setFieldValue,
-  ...props
-}: CommonInputProps) => {
-  const customHandle = (e: any)=>{
-    setFieldValue(name, e)
-  }
+  fieldInfo, // label, options, rows, etc
+  inputProps, // formik's FieldInputProps (name, value, checked, onBlur) and disabled
+  meta, // touched, error
+  setFieldValue, // to use on handleChange
+}: componentCommonProps) => {
+  const customHandle = (e: { target: { checked: boolean } }) => {
+    setFieldValue(inputProps.name, e.target.checked);
+  };
   return (
-    <>
-      <Typography>
-        <label htmlFor={props.fieldInfo.name}>{props.fieldInfo.label}</label>
-      </Typography>
-
-      <Checkbox name={name} type= 'checkbox' value={value} onChange={customHandle} />
+    <React.Fragment>
+      <Checkbox {...inputProps} onChange={customHandle}>
+        <FieldLabel {...fieldInfo} />
+      </Checkbox>
       <RedErrorBelow meta={meta} />
-    </>
+    </React.Fragment>
   );
 };
-
-

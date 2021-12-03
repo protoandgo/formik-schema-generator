@@ -1,16 +1,15 @@
-import { Select, Typography } from "antd";
+import { Select } from "antd";
 import React from "react";
-import { CommonInputProps, schemaFieldSelect } from "../../FormikBuilder2/utils/types";
-import {RedErrorBelow} from "./BasicComponents";
+import { componentCommonProps } from "../../FormikBuilder/utils/types";
+import { FieldLabel, RedErrorBelow } from "./BasicComponents";
 
 
 export const SelectInput = ({
-  field: { name, onChange, value },
-  meta,
-  setFieldValue,
-  ...props
-}: CommonInputProps) => {
- 
+  fieldInfo, // label, options, rows, etc
+  inputProps, // formik's FieldInputProps (name, value, checked, onBlur) and disabled
+  meta, // touched, error
+  setFieldValue, // to use on handleChange
+}: componentCommonProps) => {
   const ShowOptions = (options: { [value: string]: string }) => {
     const list = [];
     for (let [key, value] of Object.entries(options)) {
@@ -23,16 +22,18 @@ export const SelectInput = ({
     return list;
   };
 
+  const handleChange = (value: string) => {
+    setFieldValue(inputProps.name, value);
+  }
+
   return (
-    <>
-      <label htmlFor={name}>
-        <Typography>{props.fieldInfo.label}</Typography>
-      </label>
-      <Select style={{ width: "100%" }} value={value} >
-        {ShowOptions((props.fieldInfo as schemaFieldSelect).options)}
+    <React.Fragment>
+      <FieldLabel {...fieldInfo} />
+      <Select style={{ width: "100%" }} {...inputProps} onChange={handleChange}>
+        {ShowOptions(fieldInfo.options || {})}
       </Select>
       <RedErrorBelow meta={meta} />
-    </>
+    </React.Fragment>
   );
 };
 

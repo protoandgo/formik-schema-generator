@@ -1,33 +1,29 @@
-import { Input, Typography } from 'antd';
-import { CommonInputProps, schemaFieldTextArea } from "../../FormikBuilder2/utils/types";
-import { RedErrorBelow } from './BasicComponents';
+import { Input } from 'antd';
+import React from 'react';
+import { componentCommonProps } from "../../FormikBuilder/utils/types";
+import { FieldLabel, RedErrorBelow } from './BasicComponents';
 const { TextArea } = Input;
 
 
 export const TextAreaInput = ({
-  field: { name, onChange, value },
-  meta,
-  setFieldValue,
-  ...props
-}: CommonInputProps) => {
-  
+  fieldInfo, // label, options, rows, etc
+  inputProps, // formik's FieldInputProps (name, value, checked, onBlur) and disabled
+  meta, // touched, error
+  setFieldValue, // to use on handleChange
+}: componentCommonProps) => {
+
   const customHandle = (e: { target: { value: any } }) => {
-    setFieldValue(name, e.target.value);
+    setFieldValue(inputProps.name, e.target.value);
   };
   return (
-    <>
-      <label htmlFor={props.fieldInfo.name}>{props.fieldInfo.label}</label>
+    <React.Fragment>
+      <FieldLabel {...fieldInfo} />
       <TextArea
-        rows={(props.fieldInfo as schemaFieldTextArea).rows || 4}
-        name={name}
-        value={value}
+        {...inputProps}
         onChange={customHandle}
       />
       <RedErrorBelow meta={meta} />
-      {/* {meta.touched && meta.error ? (
-        <Typography style={{ color: "darkred" }}>{meta.error}</Typography> */}
-      {/* ) : null} */}
-    </>
+    </React.Fragment>
   );
 };
 
