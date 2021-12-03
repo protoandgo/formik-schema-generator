@@ -1,3 +1,10 @@
+# Para crear el proyecto desde cero si algo se rompe:
+
+yarn create react-app formik-schema-generator --template typescript
+cd formik-schema-generator
+yarn add formik yup antd @mui/material @emotion/react @emotion/styled
+Pegar src, .git y .gitignore
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
