@@ -1,12 +1,26 @@
 # Para crear el proyecto desde cero si algo se rompe:
 
-yarn create react-app formik-schema-generator --template typescript
+`yarn create react-app formik-schema-generator --template typescript`
 
-cd formik-schema-generator
+`cd formik-schema-generator`
 
-yarn add formik yup antd @mui/material @emotion/react @emotion/styled
+Instalar Formik y Yup:
 
-Pegar src, .git y .gitignore
+`yarn add formik yup`
+
+Instalar librerías UI:
+
+`yarn add antd @mui/material @emotion/react @emotion/styled`
+
+Instalar e iniciar Storybook:
+
+`yarn add @storybook/cli --dev`
+
+`yarn sb init`
+
+Archivos de proyecto:
+
+Pegar src, .git y .gitignore del backup
 
 # Getting Started with Create React App
 
