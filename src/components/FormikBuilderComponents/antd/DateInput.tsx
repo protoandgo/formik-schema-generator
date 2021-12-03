@@ -1,34 +1,28 @@
-import { DatePicker, Typography } from "antd";
+import { DatePicker } from "antd";
 import moment from "moment";
-import { CommonInputProps } from "../../FormikBuilder2/utils/typesOld";
-import {RedErrorBelow} from "./BasicComponents";
+import React from "react";
+import { componentCommonProps } from "../../FormikBuilder/utils/types";
+import { FieldLabel, RedErrorBelow } from "./BasicComponents";
 
 export const DateInput = ({
-  field: { name, value },
-  meta,
-  setFieldValue,
-  ...props
-}: CommonInputProps) => {
-  const customHandle = (dateObj: moment.Moment) => {
-
+  fieldInfo, // label, options, rows, etc
+  inputProps, // formik's FieldInputProps (name, value, checked, onBlur) and disabled
+  meta, // touched, error
+  setFieldValue, // to use on handleChange
+}: componentCommonProps) => {
+  const customHandle = (dateObj: moment.Moment | null) => {
     console.log(dateObj);
-    setFieldValue(name, dateObj);
+    setFieldValue(fieldInfo.id, dateObj);
   };
   return (
-    <>
-      <Typography>
-        <label htmlFor={props.fieldInfo.name}>{props.fieldInfo.label}</label>
-      </Typography>
-
+    <React.Fragment>
+      <FieldLabel {...fieldInfo} />
       <DatePicker
-        name={name}
-        //type= 'moment'
-        // defaultValue={moment('YYYY-MM-DD')}
-        value={value}
-        onOk={customHandle}
+        {...inputProps}
+        onChange={customHandle}
       />
       <RedErrorBelow meta={meta} />
-    </>
+    </React.Fragment>
   );
 };
 

@@ -1,19 +1,16 @@
 import React, { useState, useRef } from "react";
 import { Tag, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { CommonInputProps } from "../../FormikBuilder2/utils/typesOld";
-
-
+import { componentCommonProps } from "../../FormikBuilder/utils/types";
 
 const tagsInitialvalue :string[]= [];
 
-
 export const AddInput = ({
-  field: { name, onChange, value },
-  meta,
-  setFieldValue,
-  ...props
-}: CommonInputProps) => {
+  fieldInfo, // label, options, rows, etc
+  inputProps, // formik's FieldInputProps (name, value, checked, onBlur) and disabled
+  meta, // touched, error
+  setFieldValue, // to use on handleChange
+}: componentCommonProps) => {
   // STATES
   const [tags, setTags] = useState(tagsInitialvalue);
   const [inputVisible, setInputVisible] = useState(false);

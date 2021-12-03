@@ -1,97 +1,95 @@
-import { FieldHelperProps, FieldInputProps, FieldMetaProps } from "formik";
-//import AddInput from "../components/AddInput";
+import { FieldMetaProps, FieldInputProps } from "formik";
 
+export type schemaFieldComponentType =
+  | "text"
+  | "password"
+  | "textarea"
+  | "checkbox"
+  | "date"
+  | "number"
+  | "select"
+  | "array"
+  | "addinput";
 
-// Properties common in all types of fields
-interface CommonProps {
-  name: string;
-  label?: string; // title of the field
-  required?: boolean; // default false
-  requiredMessage?: string; // default --> ./utils/defaultErrorMessages.ts
-  invalidFormatMessage?: string; // default --> ./utils/defaultErrorMessages.ts
-  visible?: string; // will be true if undefined, or arg of new Function()
-  enabled?: string; // will be true if undefined, or arg of new Function()
-}
-
-interface BoxField extends CommonProps {
-  type: "box";
-  fields: FieldSchema[];
-  allowAdd?: boolean;
-}
-
-// Group of types of fields with all properties in common
-interface StringGroup extends CommonProps {
-  type: "text" | "email" | "phone" | "textarea" | "password";
-  min?: number;
-  max?: number;
-  valueTooShortMessage?: string; // default --> ./utils/defaultErrorMessages.ts
-  valueTooLongMessage?: string; // default --> ./utils/defaultErrorMessages.ts
-  regexp?: string;
-}
-
-// Field of type Checkbox
-interface CheckboxField extends CommonProps {
-  type: "checkbox";
-}
-
-// Field of type Date
-interface DateField extends CommonProps {
-  type: "date";
-  min?: string; // will be read as a date
-  max?: string; // will be read as a date
-  valueTooEarly?: string; // default --> ./utils/defaultErrorMessages.ts
-  valueTooLate?: string; // default --> ./utils/defaultErrorMessages.ts
-}
-
-// Field of type Password Confirm
-interface PasswordConfirmField extends CommonProps {
-  type: "passwordconfirm";
-  passwordFieldName: string; // to compare the two
-  passwordsDontMatchMessage?: string;
-}
-
-// Field of type Number
-interface NumberField extends CommonProps {
-  type: "number";
-  min?: number;
-  max?: number;
-  integer?: boolean; // if false, will allow floating point
-  valueTooLowMessage?: string; // default --> ./utils/defaultErrorMessages.ts
-  valueTooHighMessage?: string; // default --> ./utils/defaultErrorMessages.ts
-}
-
-// Field of type Select
-interface SelectField extends CommonProps {
-  type: "select";
-  // options: string[];
-  options: { [value: string]: string } // options: { [hidden value for the form]: text to display visually in different languages }
-  disabledOptions?: string[];
-}
-
-interface AddInput extends CommonProps{
-  type: 'addInput';
+export type schemaFieldValidator = {
+  when: [(string|string[]), {
+      is: string;
+      then: [string, ...any[]][];
+      otherwise: [string, ...any[]][];
+    }
+  ];
 };
 
-interface NumberInput extends CommonProps{
-  type: 'number';
+export interface schemaField {
+  id: string;
+  label: string;
+  type: schemaFieldComponentType;
+  visibleCondition?: string;
+  enabledCondition?: string;
+  validator?: schemaFieldValidator;
+  fields?: schemaField[]; // ARRAY
+  options?: {[id:string]: string}; // SELECT
+  rows?: number; // TEXT AREA
 }
 
-// Any Field
-export type FieldSchema = BoxField | StringGroup | CheckboxField | DateField | PasswordConfirmField | NumberField | SelectField | AddInput | NumberInput;
-
-// Form Schema
-export type FormSchema = {
-  fields: FieldSchema[];
+export interface schema {
+  title: string;
+  submitButtonText: string;
+  fields: schemaField[];
 }
 
-// =========================== Type that input components' interfaces must extend to
-export type GenericInputComponentProps = {
-  // [x: string]: any;
-  name: string; // Name of the field
-  label?: string; // Title of the field
-  field?: FieldInputProps<any>; // To add to the main component, for example: <input {...field}> </input>
-  meta?: FieldMetaProps<any>; // To display validation errors
-  // helpers: FieldHelperProps<any>; // To be able to manually set the value if needed
-  enabled?: boolean; // To display disabled version if needed
+export interface componentCommonProps {
+  fieldInfo: schemaField;
+  meta: FieldMetaProps<any>;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  inputProps: FieldInputProps<any> & { disabled: boolean; }
 }
-// example of type that
+
+export type ArrayInputProps = {
+  arrayFields: JSX.Element[];
+  onAdd: () => void;
+  remove: (index: number) => void;
+  fieldInfo: schemaField;
+};
+export type RedErrorBelowProps = { meta: FieldMetaProps<any> };
+export type FormTitleProps = { text: string };
+export type SubmitButtonProps = { text: string };
+
+
+// mixed
+//   .when(
+//     | keys: string
+//     | Array<string>
+//     ,
+//     | builder: object
+//     | (value, schema) => Schema
+//   ): Schema
+
+// EXAMPLE
+// https://runkit.com/ivrusson/61a76ea59bebcb0008798480
+// const fields = [
+//   {
+//     id: "name",
+//     type: "text",
+//     required: true,
+//   },
+//   {
+//     id: "age",
+//     type: "number",
+//     visible: "values.name === 'demo'",
+//     validator: {
+//       when: [
+//         "name",
+//         {
+//           is: "demo",
+//           then: [
+//             ["required", "Age is required"],
+//             ["string", "Age must be a string"],
+//           ],
+//           otherwise: [["string", "Age must be a string"]],
+//         },
+//       ],
+//     },
+//   },
+// ];
+// https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema

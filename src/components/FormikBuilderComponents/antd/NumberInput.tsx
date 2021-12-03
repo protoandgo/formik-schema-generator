@@ -1,31 +1,28 @@
-import { InputNumber, Typography } from 'antd';
-import { CommonInputProps } from "../../FormikBuilder2/utils/typesOld";
-import {RedErrorBelow} from "./BasicComponents";
+import { InputNumber } from 'antd';
+import React from 'react';
+import { componentCommonProps } from "../../FormikBuilder/utils/types";
+import { FieldLabel, RedErrorBelow } from "./BasicComponents";
 
 
 
 export const NumberInput = ({
-  field: { name, onChange, value },
-  meta,
-  setFieldValue,
-  ...props
-}: CommonInputProps) => {
-  
+  fieldInfo, // label, options, rows, etc
+  inputProps, // formik's FieldInputProps (name, value, checked, onBlur) and disabled
+  meta, // touched, error
+  setFieldValue, // to use on handleChange
+}: componentCommonProps) => {
+
   const customHandle = (e: number) => {
     console.log(e);
-    setFieldValue(name, e);
+    setFieldValue(inputProps.name, e);
   };
 
   return (
-    <>
-      <Typography>
-        <label htmlFor={props.fieldInfo.name}>{props.fieldInfo.label}</label>
-      </Typography>
-      
-      <InputNumber name={name} type="number" value={value} onChange={customHandle} />
-
+    <React.Fragment>
+      <FieldLabel {...fieldInfo} />
+      <InputNumber {...inputProps} onChange={customHandle} />
       <RedErrorBelow meta={meta} />
-    </>
+    </React.Fragment>
   );
 };
 
