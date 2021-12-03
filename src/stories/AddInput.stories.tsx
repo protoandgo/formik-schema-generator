@@ -1,13 +1,12 @@
 import { AddInput } from "../components/FormikBuilderComponents/antd/AddInput";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { boolean } from "yup/lib/locale";
 import './useAnt.css';
 
 export default {
   title: "AddInput",
   component: AddInput,
   argTypes: {
-    enabled: { control: boolean },
+    enabled:{ undefined },
     field: { undefined },
     meta: { undefined },
     setFieldValue: {

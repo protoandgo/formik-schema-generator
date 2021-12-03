@@ -1,12 +1,11 @@
 import { CheckboxInput } from "../components/FormikBuilderComponents/antd/CheckboxInput";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
+import "./useAnt.css";
 
 export default {
-  // dentro de esta historia podemos crear diferentes botones.
   title: "CheckboxInput",
   component: CheckboxInput,
-  argTypes: {
-    
+  argTypes: { 
     field: { undefined },
     meta: { undefined },
     setFieldValue: {

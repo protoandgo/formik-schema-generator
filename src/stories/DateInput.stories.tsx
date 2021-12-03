@@ -1,19 +1,40 @@
 import { DateInput } from "../components/FormikBuilderComponents/antd/DateInput";
+import { ComponentStory, ComponentMeta } from "@storybook/react";
+import "./useAnt.css";
+import moment from "moment";
 
 export default {
-  // dentro de esta historia podemos crear diferentes botones.
   title: "DateInput",
   component: DateInput,
-};
+  argTypes: {
+    enabled: { undefined },
+    field: { undefined },
+    meta: { undefined },
+    setFieldValue: {
+      function(field: string, value: any, shouldValidate?: boolean): void {
+        throw new Error("Function not implemented.");
+      },
+    },
+    fieldInfo: { undefined },
+  },
+} as ComponentMeta<typeof DateInput>;
 
-const Template = (args) => <DateInput text={""} {...args} />;
+const Template: ComponentStory<typeof DateInput> = (args) => <DateInput {...args} />;
 
 export const DateInput1 = Template.bind({}); //new copy of the template function above!
 DateInput1.args = {
-  text: "Date1",
+  field: {
+    name: "dateinput",
+    onchange: () => {},
+    value: moment(),
+  },
+  meta: {
+    touched: false,
+    error: "false",
+    value: "moment().toISOString()",
+    initialTouched: true,
+  },
+  //setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {},
+  fieldInfo: { name: "date", label: "date", type: "date" },
 };
 
-export const DateInput2 = Template.bind({});
-DateInput2.args = {
-  text: "Date2",
-};
