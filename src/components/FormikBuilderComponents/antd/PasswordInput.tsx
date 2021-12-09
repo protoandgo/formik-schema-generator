@@ -3,7 +3,7 @@ import React from "react";
 import { componentCommonProps } from "../../FormikBuilder/utils/types";
 import { FieldLabel, RedErrorBelow } from "./BasicComponents";
 
-export const TextInput = ({
+export const PasswordInput = ({
   fieldInfo, // label, options, rows, etc
   inputProps, // formik's FieldInputProps (name, value, checked, onBlur) and disabled
   meta, // touched, error
@@ -16,7 +16,7 @@ export const TextInput = ({
   return (
     <React.Fragment>
       <FieldLabel {...fieldInfo} disabled={inputProps.disabled} />
-      <Input {...inputProps} type={fieldInfo.type} onChange={customHandle} />
+      <Input.Password {...inputProps} type={fieldInfo.type} onChange={customHandle} />
       <RedErrorBelow meta={meta} />
     </React.Fragment>
   );

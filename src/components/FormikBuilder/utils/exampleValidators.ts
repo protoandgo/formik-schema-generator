@@ -1,7 +1,7 @@
 export const validatePhone = () => {
   return {
-    when: ['desc', {
-      is: 'demo',
+    when: ['', {
+      is: 'demo', // que pasa si no quiero un when, quiero una simple validacion?
       then: [
         ["string", "Your name must be a string"],
         ['min', 6, 'SIX CHARACTERS MINIMUM'],

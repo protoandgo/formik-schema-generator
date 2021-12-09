@@ -44,7 +44,7 @@ export interface componentCommonProps {
   fieldInfo: schemaField;
   meta: FieldMetaProps<any>;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
-  inputProps: FieldInputProps<any> & { disabled: boolean; }
+  inputProps: FieldInputProps<any> & { id?: string; disabled: boolean; }
 }
 
 export type ArrayInputProps = {

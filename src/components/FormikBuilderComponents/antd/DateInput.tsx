@@ -16,7 +16,7 @@ export const DateInput = ({
   };
   return (
     <React.Fragment>
-      <FieldLabel {...fieldInfo} />
+      <FieldLabel {...fieldInfo} disabled={inputProps.disabled} />
       <DatePicker
         {...inputProps}
         onChange={customHandle}

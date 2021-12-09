@@ -1,3 +1,4 @@
+import moment from "moment";
 import { schemaField } from "./types";
 
 export const GenerateInitValues = (schemaFields: schemaField[], initialValues?: any) => {
@@ -6,10 +7,12 @@ export const GenerateInitValues = (schemaFields: schemaField[], initialValues?: 
     if (field.type === "array" && field.fields) {
       initialValues[field.id] = GenerateInitValues(field.fields, []);
     } else if (initialValues[field.id] === undefined) {
-      if (["text", "email", "password", "phone", "textarea"].includes(field.type))
-        initialValues[field.id] = "";
-      else
         switch (field.type) {
+          case "text":
+          case "password":
+          case "textarea":
+            initialValues[field.id] = "";
+            break;
           case "number":
             initialValues[field.id] = 0;
             break;
@@ -17,10 +20,14 @@ export const GenerateInitValues = (schemaFields: schemaField[], initialValues?: 
             initialValues[field.id] = false;
             break;
           // case "date":
-          //   initialValuesEmpty[field.id] = moment().toISOString();
+          //   initialValues[field.id] = moment().toISOString(); <--- da error "date.clone is not a function"
           //   break;
           case "select":
-            if (field.options) initialValues[field.id] = field.options[0];
+            initialValues[field.id] = field.options ? field.options[0] : "";
+            break;
+          case "array":
+          case "addinput":
+            initialValues[field.id] = [];
             break;
         }
     }

@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as yup from "yup";
 import { schemaField, schemaFieldValidator } from "./types";
 
@@ -34,11 +33,11 @@ export const genYupLvl2 = (options: string[][]) => {
 // GenerateThenOrOtherwise(options);
 
 
-export const genYupLvl3 = (validator: schemaFieldValidator) => {
+export const genYupLvl3 = (validator: schemaFieldValidator, fieldId: string) => {
   // console.log("genYupLvl3");
   return Object.entries(validator).reduce((result, [key, value]) => {
     if (key === 'when') {
-      result = yup.mixed().when(value[0], {
+      result = yup.mixed().when(value[0] === '' ? fieldId : value[0], {
         is: value[1].is,// @ts-ignore
         then: genYupLvl2(value[1].then),// @ts-ignore
         otherwise: genYupLvl2(value[1].otherwise),
@@ -67,7 +66,7 @@ export const genYupLvl3 = (validator: schemaFieldValidator) => {
 export const GenerateYupSchema = (fields: schemaField[]) => {
   console.log("GenerateYupSchema");
   return yup.object().shape(fields.reduce((schema: any, field) => {
-    if (field.validator) schema[field.id] = genYupLvl3(field.validator);
+    if (field.validator) schema[field.id] = genYupLvl3(field.validator, field.id);
     return schema;
   }, {}))
 }

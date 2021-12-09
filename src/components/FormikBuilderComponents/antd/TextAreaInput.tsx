@@ -17,7 +17,7 @@ export const TextAreaInput = ({
   };
   return (
     <React.Fragment>
-      <FieldLabel {...fieldInfo} />
+      <FieldLabel {...fieldInfo} disabled={inputProps.disabled} />
       <TextArea
         {...inputProps}
         onChange={customHandle}

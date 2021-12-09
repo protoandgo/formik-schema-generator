@@ -1,25 +1,25 @@
 // Types
 import FormikBuilder from "../../components/FormikBuilder";
-import { ArrayInput, TextInput, FormTitle, SubmitButton, NumberInput, CheckboxInput, DateInput, SelectInput, TextAreaInput, AddInput } from "../../components/FormikBuilderComponents/antd";
-import { schema, schemaField } from "../../components/FormikBuilder/utils/types";
+import { ArrayInput, TextInput, FormTitle, SubmitButton, NumberInput, CheckboxInput, DateInput, SelectInput, TextAreaInput, AddInput, PasswordInput } from "../../components/FormikBuilderComponents/antd";
+import { schema } from "../../components/FormikBuilder/utils/types";
 import { registry } from "../../components/FormikBuilder/utils/ComponentRegistry";
 import '../../components/FormikBuilderComponents/antd/style.css'
 
-interface schemaExampleWithAllTypes extends schema {
-  fields: [
-    { type: 'text' } & schemaField,
-    { type: 'password' } & schemaField,
-    { type: 'textarea' } & schemaField,
-    { type: 'checkbox' } & schemaField,
-    { type: 'date' } & schemaField,
-    { type: 'number' } & schemaField,
-    { type: 'select' } & schemaField,
-    { type: 'array' } & schemaField,
-    { type: 'addinput' } & schemaField,
-  ]
-}
+// interface schemaExampleWithAllTypes extends schema {
+//   fields: [
+//     { type: 'text' } & schemaField,
+//     { type: 'password' } & schemaField,
+//     { type: 'textarea' } & schemaField,
+//     { type: 'checkbox' } & schemaField,
+//     { type: 'date' } & schemaField,
+//     { type: 'number' } & schemaField,
+//     { type: 'select' } & schemaField,
+//     { type: 'array' } & schemaField,
+//     { type: 'addinput' } & schemaField,
+//   ]
+// }
 
-const schemaTest: schemaExampleWithAllTypes = {
+const schemaTest: schema = {
   title: "Invite Friends",
   submitButtonText: "Invite",
   fields: [
@@ -27,11 +27,6 @@ const schemaTest: schemaExampleWithAllTypes = {
       label: "Your Name",
       id: "yourname",
       type: "text",
-      // validator: [
-      //   [ 'string', 'has to be text' ],
-      //   [ 'min', 4 ],
-      //   [ 'aaaa', 'eeeee' ],
-      // ]
       validator: {
         when: ['desc', {
           is: 'demo',
@@ -40,27 +35,22 @@ const schemaTest: schemaExampleWithAllTypes = {
             ['min', 6, 'SIX CHARACTERS MINIMUM'],
           ],
           otherwise: [
-            ["string", "Your name must be a string"]
+            ["string", "Your name must be a string"],
+            ["required"]
           ]
         }]
       }
     },
-    // {
-    //   label: "Tu Email:",
-    //   type: 'email',
-    //   id: "email",
-    // },
-    // {
-    //   label: "Your phone",
-    //   id: "phone",
-    //   type: "phone",
-    //   enabled: "values.yourname === 'keyy'"
-    // },
+    {
+      label: 'Entrar requiere contraseña',
+      type: 'checkbox',
+      id: 'passYesNo',
+    },
     {
       label: "Contaseña",
       id: "pass",
       type: 'password',
-      visibleCondition: 'values.yourname === "123"'
+      visibleCondition: 'values.passYesNo === true'
     },
     // {
     //   label: "Repite",
@@ -105,11 +95,15 @@ const schemaTest: schemaExampleWithAllTypes = {
       }
     },
     {
+      label: 'Invitar amigos',
+      type: 'checkbox',
+      id: 'invite',
+    },
+    {
       label: "Amigos",
       id: "friends",
       type: "array",
-      visibleCondition: 'values.yourname.includes("aa")',
-      enabledCondition: 'values.yourname === "aa"',
+      enabledCondition: 'values.invite === true',
       fields: [
         {
           id: "name",
@@ -148,7 +142,7 @@ registry.registerAll({
   text: TextInput,
   email: TextInput,
   phone: TextInput,
-  password: TextInput,
+  password: PasswordInput,
   passwordconfirm: TextInput,
   textarea: TextAreaInput,
   checkbox: CheckboxInput,
