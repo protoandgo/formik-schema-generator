@@ -18,6 +18,7 @@ export const GenerateConditionsFor = (
     if (forWhat === 'visible' && x.visibleCondition) {
       console.log("generate visibility condition " + x.visibleCondition)
       condition[fullName] = CreateCondition(x.visibleCondition);
+      console.log("Created visibility  condition for " + fullName);
     }
     else if (forWhat === 'enabled' && x.enabledCondition) {
       console.log("generate enabled condition " + x.enabledCondition)

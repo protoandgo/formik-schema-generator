@@ -51,6 +51,7 @@ const FormikBuilder = ({
       !visibilityConditions[fullName] ||
       visibilityConditions[fullName](formikContext.values)
     );
+    console.log("visibility condition for " + fullName + " exists? " + visibilityConditions[fullName]);
     if (schemaFieldInfo.id === 'pass') console.log(schemaFieldInfo.id + " visible? " + visible);
 
     // If the field is invisible, return empty React Fragment:

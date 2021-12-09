@@ -23,18 +23,20 @@ const Template: ComponentStory<typeof TextAreaInput> = (args) => <TextAreaInput 
 
 export const TextAreaInput1 = Template.bind({}); //new copy of the template function above!
 TextAreaInput1.args = {
-  field: {
-    name: "TextArea Input",
-    onchange: () => {},
-    value: "Insert any text...",
-  },
   meta: {
     touched: false,
-    error: "false",
-    value: "textareainput",
     initialTouched: true,
+    error: "There was an error",
+    value: "",
   },
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {},
-  fieldInfo: { name: "textarea", label: "textarea", type: "textarea", rows: 3 },
+  fieldInfo: { id: "testinput", label: "Test Input", type: "textarea", rows: 3 },
+  inputProps: {
+    name: "testinput",
+    onChange: () => {},
+    onBlur: () => {},
+    value: true,
+    disabled: false,
+  }
 };
 
