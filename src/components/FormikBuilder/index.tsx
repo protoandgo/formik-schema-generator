@@ -1,145 +1,122 @@
-// Imports:
+// #region imports
 // React
 import React, { useState } from "react";
 // Formik
 import { Formik, Field, Form, FieldArray, FormikProps } from "formik";
 // Types
-import { componentCommonProps, schema, schemaField } from "./utils/types";
+import { schema, schemaField } from "./utils/types";
 // Generators
 import { GenerateYupSchema } from "./utils/generateYupSchema";
 import { GenerateInitValues } from "./utils/generateInitValues";
 import { GenerateConditionsFor } from "./utils/generateConditions";
+// Components
+import { registry } from "./utils/ComponentRegistry";
 // Style
 import "./index.css";
-
-// Components: TODO register components instead
-type Components = { [x: string]: (...props: any) => JSX.Element }; // TODO register components instead
+// #endregion
 
 // Functional Component:
 const FormikBuilder = ({
   schema,
   initialValues,
-  components,
 }: {
   schema: schema;
   initialValues?: any;
-  components: Components;
 }) => {
-  // Generate conditions for visibility and enable:
-  const visibilityConditions = GenerateConditionsFor("visible", schema.fields || []);
-  const enabledConditions = GenerateConditionsFor("enabled", schema.fields || []);
+
+  // #region generate visible & enabled condition functions and yup validation schema
+  const [visibilityConditions] = useState(GenerateConditionsFor("visible", schema.fields || []));
+  const [enabledConditions] = useState(GenerateConditionsFor("enabled", schema.fields || []));
   const [validationSchema, setValidationSchema] = useState(GenerateYupSchema(schema.fields));
+  // #endregion
 
-  // Function that will be called onBlur on every field, to regenerate the yup validation schema:
-  const regenerateYup = () => {
-    setValidationSchema(GenerateYupSchema(schema.fields))
-  }
+  // #region get common components from component registry
+  const commonComponents = {
+    ArrayInput: registry.get("ArrayInput"),
+    FormTitle: registry.get("FormTitle"),
+    SubmitButton: registry.get("SubmitButton"),
+  };
+  // #endregion
 
-  // =========== FUNCTIONAL COMPONENT =========== //
-  // Function to render a single field (Field) / an array of fields (FieldArray):
+  // #region function to render a single field
   const RenderField = (
     schemaFieldInfo: schemaField,
     beforeName: string,
     formikContext: FormikProps<any>,
+    forceDisabled?: boolean, // used when an array is disabled: all its elements are disabled as well
   ) => {
-    // Know the 'path' to this property in values to be able to get the field with getFieldProps:
+    // Get the 'path' that this field will have in the formik context:
     const fullName = beforeName + schemaFieldInfo.id; // example without beforeName: 'friends'  |  example with beforeName: 'friends[0].name'
-    const formikField = formikContext.getFieldProps(fullName);
-
-    // Check if the field should be visible: (TODO: Fix! DOES NOT WORK)
-    const visible = (
-      !visibilityConditions[fullName] ||
-      visibilityConditions[fullName](formikContext.values)
-    );
-    console.log("visibility condition for " + fullName + " exists? " + visibilityConditions[fullName]);
-    if (schemaFieldInfo.id === 'pass') console.log(schemaFieldInfo.id + " visible? " + visible);
 
     // If the field is invisible, return empty React Fragment:
-    if (!visible) return <p key={schemaFieldInfo.id}>Component {schemaFieldInfo.id} invisible!</p>
+    if (visibilityConditions[fullName] && !visibilityConditions[fullName](formikContext.values))
+      return <p key={schemaFieldInfo.id}>Component {schemaFieldInfo.id} invisible!</p>;
 
-    // Check if the field should be enabled: (TODO: FieldArray should also be affected by this)
-    const enabled =
-      !enabledConditions[fullName] || enabledConditions[fullName](formikContext.values);
+    const formikField = formikContext.getFieldProps(fullName);
 
-    // =========== DISPLAY ARRAY FIELD =========== //
-    // If the field is an array, display a FieldArray
-    if (schemaFieldInfo.type === "array" && schemaFieldInfo.fields) {
-      const example = GenerateInitValues(schemaFieldInfo.fields);
-      return (
-        <div className="fieldd" key={fullName}>
+    const regenerateYup = () => {
+      setValidationSchema(GenerateYupSchema(schema.fields));
+    }
+
+    const fieldProps = {
+      fieldInfo: schemaFieldInfo, // info given in the schema for customization (label, options for select, rows for textarea, etc)
+      meta: formikContext.getFieldMeta(fullName), // meta to show errors on component
+      setFieldValue: formikContext.setFieldValue, // Manually set the field value on every component's onChange/onOk/etc depending on how the component works
+      inputProps: {
+        ...formikField, // name and value
+        id: formikField.name,
+        checked: formikField.value, // otherwise, if it's a checkbox it will give a warning
+        onBlur: regenerateYup, // Regenerate yup schema on blur on every field
+        disabled: forceDisabled || (enabledConditions[fullName] && !enabledConditions[fullName](formikContext.values)), // if disabled condition exists and it returns false, then disabled is true
+      }
+    }
+
+    return (
+      <div className="field" key={fullName}>
+        {schemaFieldInfo.fields ? (
+          // ------------------------------------------------- if has subfields, FieldArray
           <FieldArray
             name={schemaFieldInfo.id}
-            render={({ insert, remove, push }) => {
-              // For each element in the array (dynamic value, user can add and remove)...
-              // examples:
-              // formikContext.values[fullName] = []
-              // formikContext.values[fullName] = ['Hola']
-              // formikContext.values[fullName] = [ { name: 'Hola' } ]
-              // ...
-              const arrayFields = formikContext.values[fullName].map((element: any, index: number) =>
-                // For each element in the field (fixed value, depending on the schema), render the field...
-                // examples:
-                // schemaFieldInfo.fields = undefined   --->  won't happen
-                // schemaFieldInfo.fields = []   --->  won't happen
-                // schemaFieldInfo.fields = [ { label: 'Name', id: 'name', type: 'text' } ]
-                // ...
-                schemaFieldInfo.fields?.map((subfieldd, subindex) => {
-                  return RenderField(
-                    subfieldd,
-                    `${fullName}[${index}].`,
-                    formikContext
-                  );
-                })
-              )
-                || [];
-              return (
-                // Use the basic component ArrayInput, giving it
-                <components.ArrayInput
-                  arrayFields={arrayFields}
-                  onAdd={() => push(example)}
-                  remove={remove}
-                  fieldInfo={schemaFieldInfo}
+            render={({ remove, push }) => (
+                <commonComponents.ArrayInput
+                  {...fieldProps}
+                  arrayFields={
+                    formikField.value.map((_: any, index: number) => // map through each element in the array (form values that can change). example of element: { firstName: 'Timmy', age: 3 }
+                      schemaFieldInfo.fields?.map((subfield) => // map through each field in the element (schema values that are fixed). example of field: { id: firstName, label: "First Name:", type: "text" }
+                        RenderField(subfield, `${fullName}[${index}].`, formikContext, true) // render that field.
+                      )
+                    ) || [] // if the user hasn't added any entries to the array yet, then it's empty.
+                  }
+                  onAdd={() => { // on (+Add) button click, add a new empty element to the array
+                    push(GenerateInitValues(schemaFieldInfo.fields || []))
+                    regenerateYup();
+                  }}
+                  onRemove={(index: number) => { // on (-Remove) button click, delete that element (by index)
+                    remove(index);
+                    regenerateYup();
+                  }}
                 />
-              );
-            }}
+              )
+            }
           />
-        </div>
-      );
-      // =========== DISPLAY FIELD =========== //
-      // If the field is NOT an array, display a Field which 'component' depends on the type of the field
-    } else {
-      const fieldProps: componentCommonProps = {
-        fieldInfo: schemaFieldInfo, // info given in the schema for customization (label, options for select, rows for textarea, etc)
-        meta: formikContext.getFieldMeta(fullName), // meta to show errors on component
-        setFieldValue: formikContext.setFieldValue, // Manually set the field value on every component's onChange/onOk/etc depending on how the component works
-        inputProps: { // Props to give directly to the input inside the component. Example: <input {...inputProps} />
-          ...formikField, // name and value
-          checked: formikField.value, // otherwise, if it's a checkbox it will give a warning
-          onBlur: regenerateYup, // Regenerate yup schema on blur on every field
-          disabled: !enabled, // usually components dont have an "enabled" prop, but instead a "disabled" prop...
-        }
-      };
-      // Get component by type
-      const componentToDisplay =
-        components[schemaFieldInfo.type] ||
-        ((props: any) => (<span>No component given for field of type {schemaFieldInfo.type}</span>))
-      // Display Field with component
-      return (
-        <div className="fieldd" key={fullName}>
+        ) : (
+          // ------------------------------------------------- if not, Field
           <Field
             {...fieldProps}
-            component={componentToDisplay}
+            component={registry.get(schemaFieldInfo.type)}
             onChange={null}
           />
-        </div>
-      );
-    }
+        )}
+      </div>
+    );
   };
-  // =========== RETURN =========== //
+  // #endregion
+
+  // #region return FormikBuilder
   return (
     <React.Fragment>
       {/* Title of the form */}
-      <components.FormTitle text={schema.title} />
+      <commonComponents.FormTitle text={schema.title} />
       {/* Formik component with initialValues, onSubmit and validationSchema */}
       <Formik
         initialValues={GenerateInitValues(schema.fields, initialValues)}
@@ -153,16 +130,17 @@ const FormikBuilder = ({
         {(formikContext) => (
           <Form>
             {/* Render each field in the schema */}
-            {schema.fields.map((fieldInfo: schemaField, index: any) => {
-              return RenderField(fieldInfo, "", formikContext);
-            })}
+            {schema.fields.map((fieldInfo: schemaField, index: any) => 
+              RenderField(fieldInfo, "", formikContext)
+            )}
             {/* Button to submit form */}
-            <components.SubmitButton text={schema.submitButtonText} />
+            <commonComponents.SubmitButton text={schema.submitButtonText} />
           </Form>
         )}
       </Formik>
     </React.Fragment>
   );
+  // #endregion
 };
 
 export default FormikBuilder;

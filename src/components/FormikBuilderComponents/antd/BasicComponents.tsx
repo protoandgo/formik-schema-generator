@@ -12,8 +12,10 @@ import { ArrayInputProps, FormTitleProps, RedErrorBelowProps, SubmitButtonProps 
 export const ArrayInput = ({
   arrayFields,
   onAdd,
-  remove: onRemove,
+  onRemove,
   fieldInfo,
+  meta,
+  inputProps: { disabled },
 }: ArrayInputProps) => {
   return (
     <Space direction="vertical">
@@ -21,17 +23,17 @@ export const ArrayInput = ({
       <FieldLabel {...fieldInfo} />
       {/* Map through each element and display it inside an Antd Card, along with a remove button */}
       {arrayFields.map((jsxElement, index) => (
-        <Card type="inner" key={index}>
+        <Card className={disabled ? 'disabledArray' : 'enabledArray'} key={index}>
           <Space direction="vertical">
             {jsxElement}
-            <Button onClick={() => onRemove(index)}>
+            <Button disabled={disabled} onClick={() => onRemove(index)}>
               <MinusSquareOutlined />
             </Button>
           </Space>
         </Card>
       ))}
       {/* Button to add a new element to the array */}
-      <Button onClick={onAdd}>
+      <Button disabled={disabled} onClick={onAdd}>
         <PlusSquareOutlined />
       </Button>
     </Space>

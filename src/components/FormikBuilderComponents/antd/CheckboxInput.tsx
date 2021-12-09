@@ -14,7 +14,7 @@ export const CheckboxInput = ({
   };
   return (
     <React.Fragment>
-      <Checkbox {...inputProps} onChange={customHandle}>
+      <Checkbox {...inputProps} checked={inputProps.value} onChange={customHandle}>
         <FieldLabel {...fieldInfo} />
       </Checkbox>
       <RedErrorBelow meta={meta} />

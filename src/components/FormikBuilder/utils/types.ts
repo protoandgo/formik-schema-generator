@@ -24,6 +24,8 @@ export interface schemaField {
   id: string;
   label: string;
   type: schemaFieldComponentType;
+  placeholder?: string, // TODO
+  tooltip?: string, // TODO
   visibleCondition?: string;
   enabledCondition?: string;
   validator?: schemaFieldValidator;
@@ -48,8 +50,10 @@ export interface componentCommonProps {
 export type ArrayInputProps = {
   arrayFields: JSX.Element[];
   onAdd: () => void;
-  remove: (index: number) => void;
+  onRemove: (index: number) => void;
   fieldInfo: schemaField;
+  meta: FieldMetaProps<any>;
+  inputProps: { disabled: boolean; };
 };
 export type RedErrorBelowProps = { meta: FieldMetaProps<any> };
 export type FormTitleProps = { text: string };
