@@ -25,19 +25,20 @@ const Template: ComponentStory<typeof TextInput> = (args) => (
 
 export const TextInput1 = Template.bind({}); //new copy of the template function above!
 TextInput1.args = {
-  enabled: true,
-  field: {
-    name: "text",
-    onchange: () => {},
-    value: "Your text here",
-  },
   meta: {
     touched: false,
-    error: "false",
-    value: "textinput",
     initialTouched: true,
+    error: "There was an error",
+    value: "",
   },
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {},
-  fieldInfo: { name: "text", label: "text", type: "text" },
+  fieldInfo: { id: "testinput", label: "Test Input", type: "text" },
+  inputProps: {
+    name: "testinput",
+    onChange: () => {},
+    onBlur: () => {},
+    value: true,
+    disabled: false,
+  }
 };
 

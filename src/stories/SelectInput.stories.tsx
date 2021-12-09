@@ -23,20 +23,26 @@ const Template: ComponentStory<typeof SelectInput> = (args) => <SelectInput {...
 
 export const SelectInput1 = Template.bind({}); //new copy of the template function above!
 SelectInput1.args = {
-  field: {
-    name: "Select Input",
-    onchange: () => {},
-    value: 0,
-  },
   meta: {
     touched: false,
-    error: "false",
-    value: "selectinput",
     initialTouched: true,
+    error: "There was an error",
+    value: false,
   },
-
-  fieldInfo: { name: "select", label: "select", type: "select", options: { value1: 'string', value2: 'string2' }},
-  
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {},
+  fieldInfo: {
+    id: "testinput",
+    label: "Test Input",
+    type: "select",
+    options: { value1: 'string', value2: 'string2' }
+  },
+  inputProps: {
+    name: "testinput",
+    onChange: () => {},
+    onBlur: () => {},
+    value: true,
+    disabled: false,
+  }
 };
 
 

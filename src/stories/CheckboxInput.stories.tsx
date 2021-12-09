@@ -24,17 +24,19 @@ const Template: ComponentStory<typeof CheckboxInput> = (args) => (
 
 export const CheckboxInput1 = Template.bind({});
 CheckboxInput1.args = {
-  field: {
-    name: "checkbox",
-    onchange: () => {},
-    value: true,
-  },
   meta: {
     touched: false,
-    error: "false",
-    value: "Value",
     initialTouched: true,
+    error: "There was an error",
+    value: false,
   },
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {},
-  fieldInfo: { name: "value", label: "Value", type: "addinput"},
+  fieldInfo: { id: "testinput", label: "Test Input", type: "checkbox" },
+  inputProps: {
+    name: "testinput",
+    onChange: () => {},
+    onBlur: () => {},
+    value: true,
+    disabled: false,
+  }
 };

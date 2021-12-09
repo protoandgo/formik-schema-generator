@@ -23,18 +23,20 @@ const Template: ComponentStory<typeof NumberInput> = (args) => <NumberInput {...
 
 export const NumberInput1 = Template.bind({}); //new copy of the template function above!
 NumberInput1.args = {
-  field: {
-    name: "Number Input",
-    onchange: () => {},
-    value: 0,
-  },
   meta: {
     touched: false,
-    error: "false",
-    value: "numberinput",
     initialTouched: true,
+    error: "There was an error",
+    value: 0,
   },
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {},
-  fieldInfo: { name: "number", label: "number", type: "number" },
+  fieldInfo: { id: "testinput", label: "Test Input", type: "number" },
+  inputProps: {
+    name: "testinput",
+    onChange: () => {},
+    onBlur: () => {},
+    value: true,
+    disabled: false,
+  }
 };
 

@@ -27,8 +27,19 @@ const Template: ComponentStory<typeof AddInput> = (args) => (
 
 export const AddInput1 = Template.bind({});
 AddInput1.args = {
-  enabled: true,
-  field: { undefined },
-  fieldInfo: undefined ,
-  
+  meta: {
+    touched: false,
+    initialTouched: true,
+    error: "There was an error",
+    value: [],
+  },
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {},
+  fieldInfo: { id: "testinput", label: "Test Input", type: "addinput" },
+  inputProps: {
+    name: "testinput",
+    onChange: () => {},
+    onBlur: () => {},
+    value: true,
+    disabled: false,
+  }
 };

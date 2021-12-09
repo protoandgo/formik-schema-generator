@@ -23,18 +23,20 @@ const Template: ComponentStory<typeof DateInput> = (args) => <DateInput {...args
 
 export const DateInput1 = Template.bind({}); //new copy of the template function above!
 DateInput1.args = {
-  field: {
-    name: "dateinput",
-    onchange: () => {},
-    value: moment(),
-  },
   meta: {
     touched: false,
-    error: "false",
-    value: "moment().toISOString()",
     initialTouched: true,
+    error: "There was an error",
+    value: moment(),
   },
-  //setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {},
-  fieldInfo: { name: "date", label: "date", type: "date" },
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {},
+  fieldInfo: { id: "testinput", label: "Test Input", type: "date" },
+  inputProps: {
+    name: "testinput",
+    onChange: () => {},
+    onBlur: () => {},
+    value: true,
+    disabled: false,
+  }
 };
 
