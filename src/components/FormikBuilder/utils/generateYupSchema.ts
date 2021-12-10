@@ -34,18 +34,16 @@ export const genYupLvl2 = (options: string[][]) => {
 
 
 export const genYupLvl3 = (validator: schemaFieldValidator, fieldId: string) => {
-  // console.log("genYupLvl3");
-  return Object.entries(validator).reduce((result, [key, value]) => {
-    if (key === 'when') {
-      result = yup.mixed().when(value[0] === '' ? fieldId : value[0], {
-        is: value[1].is,// @ts-ignore
-        then: genYupLvl2(value[1].then),// @ts-ignore
-        otherwise: genYupLvl2(value[1].otherwise),
-      })
-    }
-    // TODO else
+  
+  validator.when.reduce((result, value) => {
+    result = yup.mixed().when(value.field === 'this' ? fieldId : value.field, {
+      is: value.is,// @ts-ignore
+      then: genYupLvl2(value.then),// @ts-ignore
+      otherwise: genYupLvl2(value.otherwise),
+    })
     return result;
   }, {})
+
 }
 // EXAMPLE ARGS:
 // const validator = {

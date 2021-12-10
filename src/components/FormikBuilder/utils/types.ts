@@ -12,13 +12,32 @@ export type schemaFieldComponentType =
   | "addinput";
 
 export type schemaFieldValidator = {
-  when: [(string|string[]), {
-      is: string;
-      then: [string, ...any[]][];
-      otherwise: [string, ...any[]][];
-    }
-  ];
+  always?: [string, ...any[]][];
+  when: {
+    field: string|string[];
+    is: any; // if a function is passed, it will be called passing it then field(s) as arguments, and it will expect to be returned true or false
+    then: [string, ...any[]][] | schemaFieldValidator;
+    // otherwise: [string, ...any[]][];
+  }[]
 };
+// ----------------------- EXAMPLE:
+const sfv1: schemaFieldValidator = {
+  always: [
+    ["string", "This field must be a string!"],
+    ["required", "This field cannot be left blank!"], // this part will always go first. If there are multiple whens, the when will go first but at the first then it will concatenate this part first
+    ["min", 8, "Minimum 8 characters, please!"]
+  ],
+  when: [
+    {
+      field: "age",
+      is: (value: any) => value > 18, // when age more than 18 , this field must be on all caps
+      then: [
+        ["regex", "[A-Z\s]+"]
+      ]
+    }
+  ]
+}
+// --------------------------------
 
 export interface schemaField {
   id: string;

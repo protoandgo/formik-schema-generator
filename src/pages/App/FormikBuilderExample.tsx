@@ -27,19 +27,22 @@ const schemaTest: schema = {
       label: "Your Name",
       id: "yourname",
       type: "text",
-      validator: {
-        when: ['desc', {
-          is: 'demo',
-          then: [
-            ["string", "Your name must be a string"],
-            ['min', 6, 'SIX CHARACTERS MINIMUM'],
-          ],
-          otherwise: [
-            ["string", "Your name must be a string"],
-            ["required"]
-          ]
-        }]
-      }
+      // validator: [{
+        // when: ['desc', {
+        //   is: 'demo',
+        //   then: [
+        //     ["string", "Your name must be a string"],
+        //     ['min', 6, 'SIX CHARACTERS MINIMUM'],
+        //   ],
+        //   otherwise: [
+        //     ["string", "Your name must be a string"],
+        //     ["required"]
+        //   ]
+        // }]
+      // },
+      // { always: [
+      //   ["string", "Your name must be a string"]
+      // ] }]
     },
     {
       label: 'Entrar requiere contraseña',

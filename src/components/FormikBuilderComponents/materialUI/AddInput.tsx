@@ -1,12 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 // MUI IMPORTS 
 import { Box } from "@mui/system";
-import { Stack, Typography, Chip, TextField } from "@mui/material";
+import { Stack, Typography, TextField, TextFieldProps } from "@mui/material";
 import { Cancel } from '@mui/icons-material';
 // PROPS
 import { componentCommonProps } from "../../FormikBuilder/utils/types";
 
-const Tags = ({data}) => {
+const Tags = ({
+  data,
+  handleDelete
+}: {
+  data: string;
+  handleDelete: (data: string) => void
+}) => {
   return (
     <Box
       sx={{
@@ -30,42 +36,50 @@ const Tags = ({data}) => {
   );
 };
 
-
-const tagsInitialValue :string[]= [];
-
 export const AddInput = ({
   fieldInfo, // label, options, rows, etc
   inputProps, // formik's FieldInputProps (name, value, checked, onBlur) and disabled
   meta, // touched, error
   setFieldValue, // to use on handleChange
 }: componentCommonProps) => {
-  
-  const tagRef = useRef();
-  const [tags, setTags] = useState([]);
- 
-  const handleOnSubmit = (e) => {
+
+  const tagRef = useRef<TextFieldProps>();
+  const [tags, setTags] = useState<string[]>([]);
+
+  const handleDelete = (value: string) => {
+    const newtags = tags.filter((val) => val !== value);
+    setTags(newtags);
+  };
+
+  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setTags([...tags, tagRef?.current.value]);
+    const currentValue: any = tagRef?.current?.value;
+    const newTag: string = typeof currentValue === 'string' ? currentValue : "";
+    setTags([...tags, newTag]);
   }
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <TextField
-        fullWidth
-        variant="standard"
-        size="small"
-        sx={{ margin: "1rem 0" }}
-        margin="none"
-        placeholder="Enter Tags here"
-        InputProps={{
-          startAdornment: (
-            <Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
-              {tags.map((data, index) => {
-                return <Tags data={data} key={index} />;
-              })}
-            </Box>
-          ),
-        }}
-      />
+      <form onSubmit={handleOnSubmit}>
+        <TextField
+          inputRef={tagRef}
+          fullWidth
+          variant="standard"
+          size="small"
+          sx={{ margin: "1rem 0" }}
+          margin="none"
+          placeholder="Enter Tags here"
+          InputProps={{
+            startAdornment: (
+              <Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
+                {tags.map((data, index) => (
+                  <Tags data={data} handleDelete={handleDelete} key={index} />
+                ))}
+              </Box>
+            ),
+          }}
+        />
+      </form>
     </Box>
   );
 };
