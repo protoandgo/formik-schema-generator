@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 // MUI IMPORTS 
 import { Box } from "@mui/system";
-import { Stack, Typography, Chip, TextField } from "@mui/material";
+import { Stack, Typography, Chip, TextField, TextFieldProps } from "@mui/material";
 import { Cancel } from '@mui/icons-material';
 // PROPS
 import { componentCommonProps } from "../../FormikBuilder/utils/types";
 
-const Tags = ({data}) => {
+const Tags = ({data, handleDelete}) => {
   return (
     <Box
       sx={{
@@ -21,9 +21,10 @@ const Tags = ({data}) => {
       }}
     >
       <Stack direction='row' gap={1}>
-        <Typography>{{data}}</Typography>
+        <Typography>{data}</Typography>
         <Cancel
-        sx={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer" }}
+          onClick={() => handleDelete(data)}
         />
       </Stack>
     </Box>
@@ -40,16 +41,24 @@ export const AddInput = ({
   setFieldValue, // to use on handleChange
 }: componentCommonProps) => {
   
-  const tagRef = useRef();
+  const tagRef = useRef<TextFieldProps>(null);
   const [tags, setTags] = useState([]);
+
+  const handleDelete = (value) => {
+    const newtags = tags.filter((val) => val !== value);
+    SetTags(newtags);
+  };
  
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    setTags([...tags, tagRef?.current.value]);
+    setTags([...tags, tagRef.current.value]);
+    tagRef.current.value=''
   }
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <form onSubmit={handleOnSubmit}>
       <TextField
+        inputRef={tagRef}
         fullWidth
         variant="standard"
         size="small"
@@ -60,12 +69,15 @@ export const AddInput = ({
           startAdornment: (
             <Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
               {tags.map((data, index) => {
-                return <Tags data={data} key={index} />;
+                return (
+                  <Tags data={data} handleDelete={handleDelete} key={index} />
+                );
               })}
             </Box>
           ),
         }}
       />
+      </form>
     </Box>
   );
 };
