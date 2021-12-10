@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 // MUI IMPORTS 
 import { Box } from "@mui/system";
 import { Stack, Typography, Chip, TextField, TextFieldProps } from "@mui/material";
@@ -46,7 +46,7 @@ export const AddInput = ({
 
   const handleDelete = (value) => {
     const newtags = tags.filter((val) => val !== value);
-    SetTags(newtags);
+    setTags(newtags);
   };
  
   const handleOnSubmit = (e) => {
