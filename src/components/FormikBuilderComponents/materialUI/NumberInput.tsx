@@ -1,5 +1,6 @@
-import { InputNumber } from 'antd';
-import React from 'react';
+import { TextField } from '@mui/material';
+import { InputProps } from 'antd';
+import React, { FormEventHandler } from 'react';
 import { componentCommonProps } from "../../FormikBuilder/utils/types";
 import { FieldLabel, RedErrorBelow } from "./BasicComponents";
 
@@ -12,15 +13,23 @@ export const NumberInput = ({
   setFieldValue, // to use on handleChange
 }: componentCommonProps) => {
 
-  const customHandle = (e: number) => {
+  const customHandle = (e: any) => {
     console.log(e);
+    e.target.value = Math.max(0, parseInt(e.target.value));
     setFieldValue(inputProps.name, e);
-  };
-
+  };;
+  
   return (
     <React.Fragment>
       <FieldLabel {...fieldInfo} />
-      <InputNumber {...inputProps} onChange={customHandle} />
+      <TextField
+        required
+        type="number"
+        id="required"
+        label="Required"
+        defaultValue= {0}
+        onInput={customHandle}
+      />
       <RedErrorBelow meta={meta} />
     </React.Fragment>
   );
