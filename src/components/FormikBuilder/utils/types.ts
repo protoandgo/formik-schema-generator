@@ -49,7 +49,7 @@ const sfv1: schemaFieldValidator = {
 
 // --------------------------------
 
-export interface schemaField {
+interface schemaFieldCommon {
   id: string;
   label: string;
   type: schemaFieldComponentType;
@@ -58,10 +58,32 @@ export interface schemaField {
   visibleCondition?: string;
   enabledCondition?: string;
   validator?: schemaFieldValidator;
-  fields?: schemaField[]; // ARRAY
-  options?: {[id:string]: string}; // SELECT
-  rows?: number; // TEXT AREA
+  // specific props
+  fields?: any;
+  options?: any;
+  rows?: any;
 }
+
+type schemaFieldArray = {
+  type: "array",
+  fields: schemaField[];
+} & schemaFieldCommon;
+
+type schemaFieldSelect = {
+  type: "select",
+  options: {[id:string]: string};
+} & schemaFieldCommon;
+
+type schemaFieldTextArea = {
+  type: "textarea",
+  rows?: number;
+} & schemaFieldCommon;
+
+export type schemaField =
+  | schemaFieldCommon
+  | schemaFieldArray
+  | schemaFieldSelect
+  | schemaFieldTextArea;
 
 export interface schema {
   title: string;

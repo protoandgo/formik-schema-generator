@@ -72,9 +72,14 @@ const FormikBuilder = ({
       }
     }
 
+    if (fieldProps.meta.touched && fieldProps.meta.error)
+      console.log("--------Error in field " + fullName + " : " + fieldProps.meta.error);
+    // else
+      // console.log("--------NO Error in field " + fullName);
+
     return (
       <div className="field" key={fullName}>
-        {schemaFieldInfo.fields ? (
+        {schemaFieldInfo.type === "array" ? (
           // ------------------------------------------------- if has subfields, FieldArray
           <FieldArray
             name={schemaFieldInfo.id}
@@ -83,7 +88,7 @@ const FormikBuilder = ({
                   {...fieldProps}
                   arrayFields={
                     formikField.value.map((_: any, index: number) => // map through each element in the array (form values that can change). example of element: { firstName: 'Timmy', age: 3 }
-                      schemaFieldInfo.fields?.map((subfield) => // map through each field in the element (schema values that are fixed). example of field: { id: firstName, label: "First Name:", type: "text" }
+                      schemaFieldInfo.fields?.map((subfield: schemaField) => // map through each field in the element (schema values that are fixed). example of field: { id: firstName, label: "First Name:", type: "text" }
                         RenderField(subfield, formikContext, `${fullName}[${index}].`, disabled) // render that field.
                       )
                     ) || [] // if the user hasn't added any entries to the array yet, then it's empty.
@@ -122,7 +127,6 @@ const FormikBuilder = ({
       <Formik
         initialValues={GenerateInitValues(schema.fields, initialValues)}
         onSubmit={async (values) => {
-          
           await new Promise((r) => setTimeout(r, 500));
           console.log(values);
           alert(JSON.stringify(values, null, 2));

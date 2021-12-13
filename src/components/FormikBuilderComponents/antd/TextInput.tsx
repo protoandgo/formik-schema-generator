@@ -9,6 +9,7 @@ export const TextInput = ({
   meta, // touched, error
   setFieldValue, // to use on handleChange
 }: componentCommonProps) => {
+
   const customHandle = (e: { target: { value: any } }) => {
     setFieldValue(inputProps.name, e.target.value);
   };

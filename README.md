@@ -22,6 +22,12 @@ Archivos de proyecto:
 
 Pegar src, .git y .gitignore del backup
 
+# Si parece que tiene lag:
+
+El lag desaparece al desplegarlo:
+
+https://stackoverflow.com/questions/67211125/react-formik-form-rendering-speed-is-slow-issue
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
