@@ -1,3 +1,11 @@
+// If you find this error:
+// react-dom.development.js:13231 Uncaught Error: Objects are not valid as a React child (found: object with keys {SOME KEYS}). If you meant to render a collection of children, use an array instead.
+// at throwOnInvalidObjectType (react-dom.development.js:13231)
+// .......
+
+// That means one or more components you registered on the registry dont ask for the correct props.
+// Find which are the correct props at: src > components > FormikBuilder > utils > types.ts
+
 import { FieldMetaProps, FieldInputProps } from "formik";
 import { BaseSchema } from "yup";
 
