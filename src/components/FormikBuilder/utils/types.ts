@@ -1,4 +1,5 @@
 import { FieldMetaProps, FieldInputProps } from "formik";
+import { BaseSchema } from "yup";
 
 export type schemaFieldComponentType =
   | "text"
@@ -13,13 +14,13 @@ export type schemaFieldComponentType =
 
 export type schemaFieldValidator = {
   always?: [string, ...any[]][];
-  when: {
+  when?: {
     field: string|string[];
     is: any; // if a function is passed, it will be called passing it then field(s) as arguments, and it will expect to be returned true or false
     then: [string, ...any[]][] | schemaFieldValidator;
     // otherwise: [string, ...any[]][];
   }[]
-};
+};// | BaseSchema;
 // ----------------------- EXAMPLE:
 const sfv1: schemaFieldValidator = {
   always: [
@@ -36,7 +37,8 @@ const sfv1: schemaFieldValidator = {
       ]
     }
   ]
-}
+};
+
 // --------------------------------
 
 export interface schemaField {

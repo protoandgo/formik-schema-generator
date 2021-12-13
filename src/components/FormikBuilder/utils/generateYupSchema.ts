@@ -1,12 +1,16 @@
 import * as yup from "yup";
 import { schemaField, schemaFieldValidator } from "./types";
 
-export const genYupLvl2 = (options: string[][]) => {
+export const genYupLvl2 = (options: any[][]) => {
   //console.log("genYupLvl2");
   return options.reduce((part, option) => {
     const type: string = option[0];
-    const params = [...option];
+    let params = [...option];
     params.shift();
+    if (Array.isArray(params[1])) // oneOf
+    params[1] = params[1].map(x => typeof x === "string" && x.startsWith("field.")
+        ? yup.ref(x.replace("field.", ""))
+        : x);
     // @ts-ignore
     if (part[type]) {
       console.log(`OK ${type}`);
@@ -32,17 +36,22 @@ export const genYupLvl2 = (options: string[][]) => {
 // ]
 // GenerateThenOrOtherwise(options);
 
-
 export const genYupLvl3 = (validator: schemaFieldValidator, fieldId: string) => {
   
-  validator.when.reduce((result, value) => {
+  // if (validator.hasOwnProperty("validateAt")) return validator;
+
+  let result: any;
+  if (validator.always) result = genYupLvl2(validator.always);
+
+
+  validator.when?.reduce((result, value) => {
     result = yup.mixed().when(value.field === 'this' ? fieldId : value.field, {
       is: value.is,// @ts-ignore
       then: genYupLvl2(value.then),// @ts-ignore
-      otherwise: genYupLvl2(value.otherwise),
+      // otherwise: genYupLvl2(value.otherwise),
     })
     return result;
-  }, {})
+  }, result)
 
 }
 // EXAMPLE ARGS:

@@ -5,6 +5,8 @@ import { schema } from "../../components/FormikBuilder/utils/types";
 import { registry } from "../../components/FormikBuilder/utils/ComponentRegistry";
 import '../../components/FormikBuilderComponents/antd/style.css'
 
+import * as yup from "yup";
+
 // interface schemaExampleWithAllTypes extends schema {
 //   fields: [
 //     { type: 'text' } & schemaField,
@@ -53,7 +55,39 @@ const schemaTest: schema = {
       label: "Contaseña",
       id: "pass",
       type: 'password',
-      visibleCondition: 'values.passYesNo === true'
+      visibleCondition: 'values.passYesNo === true',
+      validator: {
+        when: [
+          {
+            field: "passYesNo",
+            is: true,
+            then: [
+              ["string", "Password must be a string"],
+              ["required", "This field is required"],
+            ]
+          }
+        ]
+      }
+    },
+    {
+      label: "Contaseña Repetir",
+      id: "passRepeat",
+      type: 'password',
+      visibleCondition: 'values.passYesNo === true',
+      // validator: yup.string().required().oneOf([yup.ref("pass")]),
+      validator: {
+        when: [
+          {
+            field: "passYesNo",
+            is: true,
+            then: [
+              ["string", "Password must be a string"],
+              ["required", "This field is required"],
+              ["oneOf", ["field.pass"], "Password must be the same"]
+            ]
+          }
+        ]
+      }
     },
     // {
     //   label: "Repite",

@@ -12,7 +12,7 @@ import { ArrayInputProps, FormTitleProps, RedErrorBelowProps, SubmitButtonProps 
 export const ArrayInput = ({
   arrayFields,
   onAdd,
-  remove: onRemove,
+  onRemove,
   fieldInfo,
 }: ArrayInputProps) => {
   return (
