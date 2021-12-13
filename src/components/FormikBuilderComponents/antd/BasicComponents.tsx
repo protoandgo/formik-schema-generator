@@ -12,26 +12,28 @@ import { ArrayInputProps, FormTitleProps, RedErrorBelowProps, SubmitButtonProps 
 export const ArrayInput = ({
   arrayFields,
   onAdd,
-  remove: onRemove,
+  onRemove,
   fieldInfo,
+  meta,
+  inputProps: { disabled },
 }: ArrayInputProps) => {
   return (
     <Space direction="vertical">
       {/* Label of the array field */}
-      <FieldLabel {...fieldInfo} />
+      <FieldLabel {...fieldInfo} disabled={disabled} />
       {/* Map through each element and display it inside an Antd Card, along with a remove button */}
-      {arrayFields.map((jsxElement, index) => (
-        <Card type="inner" key={index}>
+      {arrayFields.map((arrayField, index) => (
+        <Card className={disabled ? 'disabledArray' : 'enabledArray'} key={index}>
           <Space direction="vertical">
-            {jsxElement}
-            <Button onClick={() => onRemove(index)}>
+            {arrayField}
+            <Button disabled={disabled} onClick={() => onRemove(index)}>
               <MinusSquareOutlined />
             </Button>
           </Space>
         </Card>
       ))}
       {/* Button to add a new element to the array */}
-      <Button onClick={onAdd}>
+      <Button disabled={disabled} onClick={onAdd}>
         <PlusSquareOutlined />
       </Button>
     </Space>
@@ -79,8 +81,8 @@ export const SubmitButton = (props: SubmitButtonProps) => {
  * @param props fieldInfo with id and label
  * @returns 
  */
-export const FieldLabel = (props: { id: string, label: string }) => (
+export const FieldLabel = (props: { id: string, label: string, disabled: boolean }) => (
   <label htmlFor={props.id}>
-    <Typography.Text>{props.label}</Typography.Text>
+    <Typography.Text disabled={props.disabled}>{props.label}</Typography.Text>
   </label>
 )

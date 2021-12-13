@@ -1,13 +1,16 @@
-// @ts-ignore
 import * as yup from "yup";
 import { schemaField, schemaFieldValidator } from "./types";
 
-export const genYupLvl2 = (options: string[][]) => {
+export const genYupLvl2 = (options: any[][]) => {
   //console.log("genYupLvl2");
   return options.reduce((part, option) => {
     const type: string = option[0];
-    const params = [...option];
+    let params = [...option];
     params.shift();
+    if (Array.isArray(params[1])) // oneOf
+    params[1] = params[1].map(x => typeof x === "string" && x.startsWith("field.")
+        ? yup.ref(x.replace("field.", ""))
+        : x);
     // @ts-ignore
     if (part[type]) {
       console.log(`OK ${type}`);
@@ -33,20 +36,23 @@ export const genYupLvl2 = (options: string[][]) => {
 // ]
 // GenerateThenOrOtherwise(options);
 
+export const genYupLvl3 = (validator: schemaFieldValidator, fieldId: string) => {
+  
+  // if (validator.hasOwnProperty("validateAt")) return validator;
 
-export const genYupLvl3 = (validator: schemaFieldValidator) => {
-  // console.log("genYupLvl3");
-  return Object.entries(validator).reduce((result, [key, value]) => {
-    if (key === 'when') {
-      result = yup.mixed().when(value[0], {
-        is: value[1].is,// @ts-ignore
-        then: genYupLvl2(value[1].then),// @ts-ignore
-        otherwise: genYupLvl2(value[1].otherwise),
-      })
-    }
-    // TODO else
+  let result: any;
+  if (validator.always) result = genYupLvl2(validator.always);
+
+
+  validator.when?.reduce((result, value) => {
+    result = yup.mixed().when(value.field === 'this' ? fieldId : value.field, {
+      is: value.is,// @ts-ignore
+      then: genYupLvl2(value.then),// @ts-ignore
+      // otherwise: genYupLvl2(value.otherwise),
+    })
     return result;
-  }, {})
+  }, result)
+
 }
 // EXAMPLE ARGS:
 // const validator = {
@@ -67,7 +73,7 @@ export const genYupLvl3 = (validator: schemaFieldValidator) => {
 export const GenerateYupSchema = (fields: schemaField[]) => {
   console.log("GenerateYupSchema");
   return yup.object().shape(fields.reduce((schema: any, field) => {
-    if (field.validator) schema[field.id] = genYupLvl3(field.validator);
+    if (field.validator) schema[field.id] = genYupLvl3(field.validator, field.id);
     return schema;
   }, {}))
 }

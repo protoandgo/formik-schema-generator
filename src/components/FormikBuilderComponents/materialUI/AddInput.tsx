@@ -80,11 +80,9 @@ export const AddInput = ({
           InputProps={{
             startAdornment: (
               <Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
-                {tags.map((data, index) => {
-                  return (
-                    <Tags data={data} handleDelete={handleDelete} key={index} />
-                  );
-                })}
+                {tags.map((data, index) => (
+                  <Tags data={data} handleDelete={handleDelete} key={index} />
+                ))}
               </Box>
             ),
           }}

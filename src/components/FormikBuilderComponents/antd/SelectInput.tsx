@@ -28,7 +28,7 @@ export const SelectInput = ({
 
   return (
     <React.Fragment>
-      <FieldLabel {...fieldInfo} />
+      <FieldLabel {...fieldInfo} disabled={inputProps.disabled} />
       <Select style={{ width: "100%" }} {...inputProps} onChange={handleChange}>
         {ShowOptions(fieldInfo.options || {})}
       </Select>

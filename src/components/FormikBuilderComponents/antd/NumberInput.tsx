@@ -19,7 +19,7 @@ export const NumberInput = ({
 
   return (
     <React.Fragment>
-      <FieldLabel {...fieldInfo} />
+      <FieldLabel {...fieldInfo} disabled={inputProps.disabled} />
       <InputNumber {...inputProps} onChange={customHandle} />
       <RedErrorBelow meta={meta} />
     </React.Fragment>
