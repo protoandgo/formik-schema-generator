@@ -144,6 +144,7 @@ const FormikBuilder = ({
       <Formik
         initialValues={GenerateInitValues(schema.fields, initialValues)}
         onSubmit={async (values) => {
+          
           await new Promise((r) => setTimeout(r, 500));
           console.log(values);
           alert(JSON.stringify(values, null, 2));

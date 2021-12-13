@@ -51,44 +51,44 @@ export const AddInput = ({
     setFieldValue(inputProps.name, newTags);
   };
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleOnSubmit = () => {
     const currentValue: any = tagRef?.current?.value;
     const newTag: string = typeof currentValue === "string" ? currentValue : "";
 
     setTags([...tags, newTag]); //to try the component without depending on formik
     setFieldValue(inputProps.name, [...tags, newTag]);
+
+    inputProps.onBlur(null)
+    if (tagRef.current) tagRef.current.value = "";
+    
   };
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <FieldLabel {...fieldInfo} />
-        <form onSubmit={handleOnSubmit}>
-          <TextField
-            inputRef={tagRef}
-            fullWidth
-            variant="standard"
-            size="small"
-            sx={{ margin: "1rem 0" }}
-            margin="none"
-            placeholder="Enter Tags here"
-            InputProps={{
-              startAdornment: (
-                <Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
-                  {tags.map((data, index) => {
-                    return (
-                      <Tags
-                        data={data}
-                        handleDelete={handleDelete}
-                        key={index}
-                      />
-                    );
-                  })}
-                </Box>
-              ),
-            }}
-          />
-        </form>
+
+        <TextField
+          onKeyDown={e=> {if (e.key === '13'){handleOnSubmit()} }}
+          onBlur={e=> handleOnSubmit()}
+          inputRef={tagRef}
+          fullWidth
+          variant="standard"
+          size="small"
+          sx={{ margin: "1rem 0" }}
+          margin="none"
+          placeholder="Enter Tags here"
+          InputProps={{
+            startAdornment: (
+              <Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
+                {tags.map((data, index) => {
+                  return (
+                    <Tags data={data} handleDelete={handleDelete} key={index} />
+                  );
+                })}
+              </Box>
+            ),
+          }}
+        />
       </Box>
       <RedErrorBelow meta={meta} />
     </>
