@@ -1,9 +1,18 @@
 // Types
 import FormikBuilder from "../../components/FormikBuilder";
-import { ArrayInput, TextInput, FormTitle, SubmitButton, NumberInput, CheckboxInput, DateInput, SelectInput, TextAreaInput, AddInput, PasswordInput } from "../../components/FormikBuilderComponents/antd";
-import { schema } from "../../components/FormikBuilder/utils/types";
+// import { ArrayInput, TextInput, FormTitle, SubmitButton, NumberInput, CheckboxInput, DateInput, SelectInput, TextAreaInput, AddInput, PasswordInput } from "../../components/FormikBuilderComponents/antd";
+// import { schema } from "../../components/FormikBuilder/utils/types";
 import { registry } from "../../components/FormikBuilder/utils/ComponentRegistry";
 import '../../components/FormikBuilderComponents/antd/style.css'
+//import { ArrayInput, TextInput, FormTitle, SubmitButton, NumberInput, CheckboxInput, DateInput, SelectInput, TextAreaInput, AddInput } from "../../components/FormikBuilderComponents/antd";
+import { schema, schemaField } from "../../components/FormikBuilder/utils/types";
+import { AddInput } from "../../components/FormikBuilderComponents/materialUI/AddInput";
+import { ArrayInput, FormTitle, SubmitButton } from "../../components/FormikBuilderComponents/materialUI/BasicComponents";
+import { CheckboxInput } from "../../components/FormikBuilderComponents/materialUI/CheckboxInput";
+import { DateInput } from "../../components/FormikBuilderComponents/materialUI/DateInput";
+import { NumberInput } from "../../components/FormikBuilderComponents/materialUI/NumberInput";
+import { TextAreaInput } from "../../components/FormikBuilderComponents/materialUI/TextAreaInput";
+import { TextInput } from "../../components/FormikBuilderComponents/materialUI/TextInput";
 
 import * as yup from "yup";
 
@@ -179,13 +188,13 @@ registry.registerAll({
   text: TextInput,
   email: TextInput,
   phone: TextInput,
-  password: PasswordInput,
+  // password: PasswordInput,
   passwordconfirm: TextInput,
   textarea: TextAreaInput,
   checkbox: CheckboxInput,
   date: DateInput,
   number: NumberInput,
-  select: SelectInput,
+  // select: SelectInput,
   addinput: AddInput,
 });
 

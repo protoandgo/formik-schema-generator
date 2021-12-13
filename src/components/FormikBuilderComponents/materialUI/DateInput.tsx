@@ -26,7 +26,7 @@ export const DateInput = ({
       <LocalizationProvider dateAdapter={DateAdapter}>
         <DesktopDatePicker
           label={<FieldLabel {...fieldInfo} />}
-          inputFormat="MM/dd/yyyy"
+          inputFormat="MM/DD/yyyy"
           {...inputProps}
           onChange={customHandle}
           renderInput={(params) => <TextField {...params} />}

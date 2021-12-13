@@ -1,17 +1,19 @@
 import React, { useRef, useState } from "react";
-// MUI IMPORTS 
+// Basic components
+import {FieldLabel, RedErrorBelow} from './BasicComponents'
+// MUI IMPORTS
 import { Box } from "@mui/system";
 import { Stack, Typography, TextField, TextFieldProps } from "@mui/material";
-import { Cancel } from '@mui/icons-material';
+import { Cancel } from "@mui/icons-material";
 // PROPS
 import { componentCommonProps } from "../../FormikBuilder/utils/types";
 
 const Tags = ({
   data,
-  handleDelete
+  handleDelete,
 }: {
   data: string;
-  handleDelete: (data: string) => void
+  handleDelete: (data: string) => void;
 }) => {
   return (
     <Box
@@ -26,11 +28,9 @@ const Tags = ({
         color: "#ffffff",
       }}
     >
-      <Stack direction='row' gap={1}>
-        <Typography>{{data}}</Typography>
-        <Cancel
-        sx={{ cursor: "pointer" }}
-        />
+      <Stack direction="row" gap={1}>
+        <Typography>{data}</Typography>
+        <Cancel sx={{ cursor: "pointer" }} onClick={() => handleDelete(data)} />
       </Stack>
     </Box>
   );
@@ -42,26 +42,34 @@ export const AddInput = ({
   meta, // touched, error
   setFieldValue, // to use on handleChange
 }: componentCommonProps) => {
-
-  const tagRef = useRef<TextFieldProps>();
+  const tagRef = useRef<TextFieldProps>(null);
   const [tags, setTags] = useState<string[]>([]);
 
   const handleDelete = (value: string) => {
-    const newtags = tags.filter((val) => val !== value);
-    setTags(newtags);
+    const newTags = tags.filter((val) => val !== value);
+    setTags(newTags);//to try the component without depending on formik
+    setFieldValue(inputProps.name, newTags);
   };
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleOnSubmit = () => {
     const currentValue: any = tagRef?.current?.value;
-    const newTag: string = typeof currentValue === 'string' ? currentValue : "";
-    setTags([...tags, newTag]);
-  }
-  
+    const newTag: string = typeof currentValue === "string" ? currentValue : "";
+
+    setTags([...tags, newTag]); //to try the component without depending on formik
+    setFieldValue(inputProps.name, [...tags, newTag]);
+
+    inputProps.onBlur(null)
+    if (tagRef.current) tagRef.current.value = "";
+    
+  };
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <form onSubmit={handleOnSubmit}>
+    <>
+      <Box sx={{ flexGrow: 1 }}>
+        <FieldLabel {...fieldInfo} />
+
         <TextField
+          onKeyDown={e=> {if (e.key === '13'){handleOnSubmit()} }}
+          onBlur={e=> handleOnSubmit()}
           inputRef={tagRef}
           fullWidth
           variant="standard"
@@ -79,7 +87,8 @@ export const AddInput = ({
             ),
           }}
         />
-      </form>
-    </Box>
+      </Box>
+      <RedErrorBelow meta={meta} />
+    </>
   );
 };
